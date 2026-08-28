@@ -17,6 +17,10 @@ single Docker container. No database, no authentication — just config.
 
 - Python 3.14+ and [`uv`](https://docs.astral.sh/uv/) for local development,
   **or** Docker for running the container.
+- **Node.js (≥18) and [pnpm](https://pnpm.io/)** to provision the Bootstrap
+  assets. Install pnpm once if missing: `npm install -g pnpm`, or use Corepack
+  (`corepack enable`). Node/pnpm are developer/build tooling only — they are not
+  needed to run the deployed container.
 
 ## Configuration
 
@@ -45,12 +49,38 @@ bookmark_groups:
 - When `CONFIG_PATH` is unset, it defaults to `config/example.yaml` (relative to the
   working directory).
 
+## Bootstrap Assets
+
+The Bootstrap CSS/JS are **not** committed to source control. They are tracked as a
+dependency in [`package.json`](package.json) (pinned version) with `pnpm`, and
+provisioned into `app/static/bootstrap/` by copying the compiled files from the
+installed package.
+
+Provision on a fresh checkout:
+
+```bash
+pnpm setup        # = pnpm install && pnpm provision
+```
+
+After provisioning, `app/static/bootstrap/css/bootstrap.min.css` and
+`app/static/bootstrap/js/bootstrap.bundle.min.js` exist and the page is styled.
+
+To **update the Bootstrap version**:
+
+```bash
+pnpm add bootstrap@X.Y.Z   # updates package.json + pnpm-lock.yaml
+pnpm provision             # replaces the assets with the new version
+```
+
+The manifest (`package.json`) and lockfile (`pnpm-lock.yaml`) are tracked; the
+downloaded assets (`node_modules/`, `app/static/bootstrap/`) are gitignored.
+
 ## Local Run (Development)
 
 ```bash
 uv sync
 export CONFIG_PATH=config/example.yaml
-python -m app.server
+uv run -m app.server
 ```
 
 Open <http://localhost:5000>. Edit `config/example.yaml`, save, and refresh to see changes.

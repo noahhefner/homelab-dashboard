@@ -10,6 +10,12 @@ build/
 # Docker
 *.log
 
+# pnpm / Node
+node_modules/
+
+# Provisioned Bootstrap assets (populated by pnpm provision)
+app/static/bootstrap/
+
 # Universal
 .DS_Store
 Thumbs.db

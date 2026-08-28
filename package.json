@@ -1,0 +1,13 @@
+{
+  "name": "homelab-dashboard",
+  "description": "Self-hosted home server dashboard homepage driven by a single YAML config",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "provision": "scripts/provision-bootstrap.sh",
+    "setup": "pnpm install && pnpm provision"
+  },
+  "dependencies": {
+    "bootstrap": "5.3.3"
+  }
+}
