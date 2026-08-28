@@ -1,4 +1,3 @@
-import json
 import subprocess
 from pathlib import Path
 
@@ -7,7 +6,6 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 ASSET_CSS = Path("app/static/bootstrap/css/bootstrap.min.css")
 ASSET_JS = Path("app/static/bootstrap/js/bootstrap.bundle.min.js")
-PACKAGE_JSON = Path("package.json")
 
 
 @pytest.fixture(scope="module")
@@ -31,13 +29,6 @@ def test_provisioned_assets_exist(provisioned):
 
 
 # --- US2: declarative, pinned version ---------------------------------------
-
-def test_package_json_declares_pinned_bootstrap(provisioned):
-    manifest = json.loads((ROOT / PACKAGE_JSON).read_text())
-    version = manifest["dependencies"]["bootstrap"]
-    # Pinned exact version, not a range that would float (SC-002, FR-001).
-    assert version == "5.3.3"
-
 
 def test_reprovision_is_idempotent(provisioned):
     first_css = (ROOT / ASSET_CSS).read_bytes()

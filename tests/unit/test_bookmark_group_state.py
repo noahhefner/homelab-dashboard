@@ -51,6 +51,13 @@ def test_groups_have_stable_state_key(tmp_path):
 
 def test_app_js_implements_localstorage_persistence():
     source = APP_JS.read_text(encoding="utf-8")
+    # Group state persists across visits via localStorage.
     assert "localStorage" in source
+    # The toggle is wired via data attributes consumed by the JS.
     assert "data-group-toggle" in source
-    assert "data-group-content" in source
+    # The collapse target is resolved from the toggle's data-bs-target.
+    assert "data-bs-target" in source
+    # Bootstrap Collapse drives show/hide; its events persist state.
+    assert "bootstrap.Collapse" in source
+    assert "show.bs.collapse" in source
+    assert "hide.bs.collapse" in source

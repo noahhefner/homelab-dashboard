@@ -4,75 +4,84 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ title }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='uikit/css/uikit.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
   </head>
-  <body class="uk-background-muted">
-    <div class="uk-container uk-container-expand uk-padding">
-      <header class="uk-margin-bottom">
-        <h1 class="uk-heading-medium uk-text-center uk-margin-remove-top">{{ title }}</h1>
+  <body>
+    <div class="container py-4">
+      <header class="mb-4">
+        <h1 class="display-5 text-center text-uppercase fw-semibold mb-0">{{ title }}</h1>
       </header>
 
       <main>
-        <section aria-label="Services" class="uk-margin-bottom">
-          <div class="uk-grid-small uk-child-width-1-2 uk-child-width-1-3@s uk-child-width-1-4@m uk-child-width-1-5@l uk-flex-center uk-text-center" uk-grid>
-            {% for service in services %}
-            <div>
-              <a class="uk-link-reset service-tile"
-                 href="{{ service.url }}"
-                 target="_blank"
-                 rel="noopener noreferrer">
-                <div class="service-icon">
-                  {% if service.icon and service.icon is url %}
-                  <img src="{{ service.icon }}"
-                       alt="{{ service.name }}"
-                       loading="lazy"
-                       onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                  <span class="service-monogram" style="display:none">{{ service.name[:1]|upper }}</span>
-                  {% else %}
-                  <span class="service-monogram">{{ service.name[:1]|upper }}</span>
-                  {% endif %}
-                </div>
-                <span class="service-name">{{ service.name }}</span>
-              </a>
+        <div class="row g-4">
+          <!-- Services: main area, full width on mobile, left ~75% on desktop (lg+) -->
+          <section aria-label="Services" class="col-12 col-lg-9">
+            <div class="row g-3">
+              {% for service in services %}
+              <div class="col-6 col-sm-4 col-md-3 col-xl-2">
+                <a class="app-tile service-tile"
+                   href="{{ service.url }}"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                  <div class="service-icon">
+                    {% if service.icon and service.icon is url %}
+                    <img src="{{ service.icon }}"
+                         alt="{{ service.name }}"
+                         loading="lazy"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                    <span class="service-monogram" style="display:none">{{ service.name[:1]|upper }}</span>
+                    {% else %}
+                    <span class="service-monogram">{{ service.name[:1]|upper }}</span>
+                    {% endif %}
+                  </div>
+                  <span class="service-name">{{ service.name }}</span>
+                </a>
+              </div>
+              {% endfor %}
             </div>
-            {% endfor %}
-          </div>
-        </section>
+          </section>
 
-        <section aria-label="Bookmarks">
-          {% for group in bookmark_groups %}
-          <div class="uk-margin-bottom bookmark-group">
-            <button type="button" class="uk-button uk-button-text group-toggle"
-                    data-group-id="{{ group.name }}"
-                    data-group-toggle>
-              <span>{{ group.name }}</span>
-              <span class="group-caret" aria-hidden="true">▾</span>
-            </button>
-            <div class="group-content" data-group-content>
-              <div class="uk-grid-small uk-child-width-1-2 uk-child-width-1-3@s uk-child-width-1-4@m uk-child-width-1-5@l" uk-grid>
-                {% for bookmark in group.bookmarks %}
-                <div>
-                  <a href="{{ bookmark.url }}"
-                     class="uk-link-reset bookmark-link"
-                     target="_blank"
-                     rel="noopener noreferrer">
-                    <span class="bookmark-label">{{ bookmark.label }}</span>
-                  </a>
-                </div>
-                {% endfor %}
+          <!-- Bookmarks: below the apps on mobile, right column on desktop (lg+) -->
+          <aside aria-label="Bookmarks" class="col-12 col-lg-3">
+            {% if bookmark_groups %}
+            {% for group in bookmark_groups %}
+            <div class="bookmark-group mb-3">
+              <button type="button"
+                      class="group-toggle"
+                      data-group-id="{{ group.name }}"
+                      data-group-toggle
+                      data-bs-toggle="collapse"
+                      data-bs-target="#bookmark-group-{{ loop.index }}">
+                <span class="group-title">{{ group.name }}</span>
+                <span class="group-caret" aria-hidden="true">▾</span>
+              </button>
+              <div class="collapse" id="bookmark-group-{{ loop.index }}"
+                   data-group-content>
+                <ul class="bookmark-list">
+                  {% for bookmark in group.bookmarks %}
+                  <li>
+                    <a href="{{ bookmark.url }}"
+                       class="bookmark-link"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                      {{ bookmark.label }}
+                    </a>
+                  </li>
+                  {% endfor %}
+                </ul>
               </div>
             </div>
-          </div>
-          {% else %}
-          <p class="uk-text-muted uk-text-center">No bookmarks configured yet.</p>
-          {% endfor %}
-        </section>
+            {% endfor %}
+            {% else %}
+            <p class="text-muted">No bookmarks configured yet.</p>
+            {% endif %}
+          </aside>
+        </div>
       </main>
     </div>
 
-    <script src="{{ url_for('static', filename='uikit/js/uikit.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='uikit/js/uikit-icons.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='app.js') }}"></script>
   </body>
 </html>

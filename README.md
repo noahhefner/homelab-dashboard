@@ -32,7 +32,7 @@ title: "Home Lab"
 services:
   - name: Plex
     url: "https://plex.lan:32400"
-    icon: plex      # optional; a monogram is shown when absent or invalid
+    icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg"  # logo; a monogram is shown when absent/invalid
 
 bookmark_groups:
   - name: Media
@@ -48,6 +48,26 @@ bookmark_groups:
   letter of the name is shown as a monogram.
 - When `CONFIG_PATH` is unset, it defaults to `config/example.yaml` (relative to the
   working directory).
+
+## Service Logos
+
+Each service can show a recognizable **logo** by setting its `icon` to any valid remote
+image URL — no local files or committed binaries required. The example config uses
+logos from [dashboardicons.com](https://dashboardicons.com/), a convenient, curated
+source of service logos (direct assets use the jsDelivr pattern
+`https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/<name>.svg`).
+
+- Any `http(s)` image URL works as a logo (e.g., your own CDN or static host).
+- If a logo is absent, not a valid URL, or fails to load, the tile shows a monogram
+  (first letter of the service name) — the page never breaks.
+- To change a logo, edit the `icon` URL and refresh; no rebuild or restart is needed.
+
+```yaml
+services:
+  - name: Plex
+    url: "https://plex.lan:32400"
+    icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg"
+```
 
 ## Bootstrap Assets
 

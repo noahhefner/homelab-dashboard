@@ -64,3 +64,32 @@ def test_removing_bookmark_reflected_on_refresh(tmp_path):
 
     html = client.get("/").get_data(as_text=True)
     assert "Drop" not in html
+
+
+def test_service_logo_change_reflected_on_reload(tmp_path):
+    cfg = tmp_path / "config.yaml"
+    logo_a = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg"
+    logo_b = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextcloud.svg"
+    _write(cfg, {"services": [{"name": "Svc", "url": "https://svc.lan", "icon": logo_a}]})
+
+    app = create_app(config_path=str(cfg))
+    client = app.test_client()
+
+    # Initial: the logo <img> for logo_a is present.
+    assert 'src="%s"' % logo_a in client.get("/").get_data(as_text=True)
+
+    # Change the logo to logo_b -> reflected on next request (no restart/rebuild).
+    _write(cfg, {"services": [{"name": "Svc", "url": "https://svc.lan", "icon": logo_b}]})
+    _bump_mtime(cfg)
+    time.sleep(0.01)
+    html = client.get("/").get_data(as_text=True)
+    assert 'src="%s"' % logo_b in html
+    assert 'src="%s"' % logo_a not in html
+
+    # Remove the logo -> falls back to a monogram on reload.
+    _write(cfg, {"services": [{"name": "Svc", "url": "https://svc.lan"}]})
+    _bump_mtime(cfg)
+    time.sleep(0.01)
+    html = client.get("/").get_data(as_text=True)
+    assert 'src="%s"' % logo_b not in html
+    assert '<span class="service-monogram">S</span>' in html
