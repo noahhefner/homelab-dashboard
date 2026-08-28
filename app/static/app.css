@@ -1,0 +1,121 @@
+:root {
+  --monogram-bg: #3b82f6;
+  --monogram-fg: #ffffff;
+  --tile-bg: #ffffff;
+  --tile-radius: 12px;
+}
+
+.service-tile,
+.bookmark-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: var(--tile-bg);
+  border-radius: var(--tile-radius);
+  height: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.service-tile:hover,
+.bookmark-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+}
+
+.service-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.service-icon img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.service-monogram {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--monogram-bg);
+  color: var(--monogram-fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.service-name {
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.bookmark-label {
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.group-toggle {
+  width: 100%;
+  text-align: left;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e7eb;
+  border-radius: 0;
+  margin-bottom: 0.75rem;
+}
+
+.group-caret {
+  transition: transform 0.15s ease;
+}
+
+.group-toggle.is-collapsed .group-caret {
+  transform: rotate(-90deg);
+}
+
+/* Mobile refinements: comfortable touch targets and tighter padding on small screens */
+@media (max-width: 639px) {
+  .service-tile,
+  .bookmark-link {
+    min-height: 4.5rem;
+    padding: 0.75rem 0.5rem;
+  }
+
+  .service-icon,
+  .service-icon img,
+  .service-monogram {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+
+  .uk-container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .service-name,
+  .bookmark-label {
+    font-size: 0.8rem;
+  }
+
+  .group-toggle {
+    font-size: 1rem;
+    padding: 0.75rem 0;
+  }
+}

@@ -1,0 +1,14 @@
+services:
+  dashboard:
+    build: .
+    image: homelab-dashboard
+    container_name: homelab-dashboard
+    ports:
+      - "5000:5000"
+    environment:
+      - CONFIG_PATH=/app/config/example.yaml
+    volumes:
+      # Mount your live-editable config over the bundled example.
+      # Edit this file on the host and refresh to see changes - no restart needed.
+      - ./config/example.yaml:/app/config/example.yaml:ro
+    restart: unless-stopped
