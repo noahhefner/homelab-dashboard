@@ -1,0 +1,18 @@
+when:
+  event: manual
+
+steps:
+  - name: build-and-push
+    image: docker:cli
+    environment:
+      DOCKERHUB_USERNAME:
+        from_secret: dockerhub_username
+      DOCKERHUB_TOKEN:
+        from_secret: dockerhub_token
+
+    commands:
+      - echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+      - docker build -t "$DOCKERHUB_USERNAME/homepage-dashboard:${CI_COMMIT_SHA}" .
+      - docker tag "$DOCKERHUB_USERNAME/homepage-dashboard:${CI_COMMIT_SHA}" "$DOCKERHUB_USERNAME/homepage-dashboard:latest"
+      - docker push "$DOCKERHUB_USERNAME/homepage-dashboard:${CI_COMMIT_SHA}"
+      - docker push "$DOCKERHUB_USERNAME/homepage-dashboard:latest"
