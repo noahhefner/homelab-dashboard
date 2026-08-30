@@ -10,5 +10,5 @@ services:
     volumes:
       # Mount your live-editable config over the bundled example.
       # Edit this file on the host and refresh to see changes - no restart needed.
-      - ./config/example.yaml:/app/config/example.yaml:ro
+      - ./config:/app/config
     restart: unless-stopped

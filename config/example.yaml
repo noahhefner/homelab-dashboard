@@ -5,7 +5,7 @@ editor: true
 
 services:
   - name: Plex
-    url: "https://plex.lan:32400"
+    url: "https://plex.lan:3240"
     icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg"
   - name: Nextcloud
     url: "https://cloud.lan"
