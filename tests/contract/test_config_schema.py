@@ -44,7 +44,9 @@ def test_contract_fields(example_config_data):
 def test_contract_service_required_fields(example_config_data):
     for service in example_config_data.get("services", []):
         assert service.get("name"), "service.name required"
-        assert re.match(r"^https?://", service.get("url", "")), "service.url must be http(s)"
+        assert re.match(r"^https?://", service.get("url", "")), (
+            "service.url must be http(s)"
+        )
 
 
 def test_contract_bookmark_urls_http(example_config_data):
@@ -52,9 +54,9 @@ def test_contract_bookmark_urls_http(example_config_data):
         assert group.get("name"), "bookmark_group.name required"
         for bookmark in group.get("bookmarks", []):
             assert bookmark.get("label"), "bookmark.label required"
-            assert re.match(
-                r"^https?://", bookmark.get("url", "")
-            ), "bookmark.url must be http(s)"
+            assert re.match(r"^https?://", bookmark.get("url", "")), (
+                "bookmark.url must be http(s)"
+            )
 
 
 @pytest.fixture

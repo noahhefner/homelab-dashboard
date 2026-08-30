@@ -1,6 +1,5 @@
 import os
 import time
-from pathlib import Path
 
 import yaml
 
@@ -26,12 +25,15 @@ def test_config_edit_reflected_on_refresh(tmp_path):
     assert "One" in client.get("/").get_data(as_text=True)
     assert "Two" not in client.get("/").get_data(as_text=True)
 
-    _write(cfg, {
-        "services": [
-            {"name": "One", "url": "https://one.lan"},
-            {"name": "Two", "url": "https://two.lan"},
-        ]
-    })
+    _write(
+        cfg,
+        {
+            "services": [
+                {"name": "One", "url": "https://one.lan"},
+                {"name": "Two", "url": "https://two.lan"},
+            ]
+        },
+    )
     _bump_mtime(cfg)
     time.sleep(0.01)
 
@@ -41,24 +43,36 @@ def test_config_edit_reflected_on_refresh(tmp_path):
 
 def test_removing_bookmark_reflected_on_refresh(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {
-        "bookmark_groups": [
-            {"name": "G", "bookmarks": [
-                {"label": "Keep", "url": "https://keep.com"},
-                {"label": "Drop", "url": "https://drop.com"},
-            ]}
-        ]
-    })
+    _write(
+        cfg,
+        {
+            "bookmark_groups": [
+                {
+                    "name": "G",
+                    "bookmarks": [
+                        {"label": "Keep", "url": "https://keep.com"},
+                        {"label": "Drop", "url": "https://drop.com"},
+                    ],
+                }
+            ]
+        },
+    )
 
     app = create_app(config_path=str(cfg))
     client = app.test_client()
     assert "Drop" in client.get("/").get_data(as_text=True)
 
-    _write(cfg, {
-        "bookmark_groups": [
-            {"name": "G", "bookmarks": [{"label": "Keep", "url": "https://keep.com"}]}
-        ]
-    })
+    _write(
+        cfg,
+        {
+            "bookmark_groups": [
+                {
+                    "name": "G",
+                    "bookmarks": [{"label": "Keep", "url": "https://keep.com"}],
+                }
+            ]
+        },
+    )
     _bump_mtime(cfg)
     time.sleep(0.01)
 
@@ -70,7 +84,9 @@ def test_service_logo_change_reflected_on_reload(tmp_path):
     cfg = tmp_path / "config.yaml"
     logo_a = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg"
     logo_b = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextcloud.svg"
-    _write(cfg, {"services": [{"name": "Svc", "url": "https://svc.lan", "icon": logo_a}]})
+    _write(
+        cfg, {"services": [{"name": "Svc", "url": "https://svc.lan", "icon": logo_a}]}
+    )
 
     app = create_app(config_path=str(cfg))
     client = app.test_client()
@@ -79,7 +95,9 @@ def test_service_logo_change_reflected_on_reload(tmp_path):
     assert 'src="%s"' % logo_a in client.get("/").get_data(as_text=True)
 
     # Change the logo to logo_b -> reflected on next request (no restart/rebuild).
-    _write(cfg, {"services": [{"name": "Svc", "url": "https://svc.lan", "icon": logo_b}]})
+    _write(
+        cfg, {"services": [{"name": "Svc", "url": "https://svc.lan", "icon": logo_b}]}
+    )
     _bump_mtime(cfg)
     time.sleep(0.01)
     html = client.get("/").get_data(as_text=True)

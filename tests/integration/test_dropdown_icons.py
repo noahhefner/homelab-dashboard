@@ -14,7 +14,10 @@ def _write_config(tmpdir, data):
 def test_accordion_chevron_not_literal_carat(tmp_path):
     data = {
         "bookmark_groups": [
-            {"name": "Media", "bookmarks": [{"label": "YouTube", "url": "https://youtube.com"}]}
+            {
+                "name": "Media",
+                "bookmarks": [{"label": "YouTube", "url": "https://youtube.com"}],
+            }
         ]
     }
     app = create_app(config_path=_write_config(tmp_path, data))
@@ -30,7 +33,10 @@ def test_accordion_chevron_not_literal_carat(tmp_path):
 def test_accordion_header_contains_group_name(tmp_path):
     data = {
         "bookmark_groups": [
-            {"name": "Media", "bookmarks": [{"label": "YouTube", "url": "https://youtube.com"}]}
+            {
+                "name": "Media",
+                "bookmarks": [{"label": "YouTube", "url": "https://youtube.com"}],
+            }
         ]
     }
     app = create_app(config_path=_write_config(tmp_path, data))

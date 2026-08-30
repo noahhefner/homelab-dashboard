@@ -1,6 +1,4 @@
-import pytest
-
-from app.security import validate_url, escape_html
+from app.security import escape_html, validate_url
 
 
 def test_validate_url_accepts_http():
@@ -28,11 +26,17 @@ def test_validate_url_rejects_empty():
 
 
 def test_escape_html_escapes_angle_brackets():
-    assert escape_html("<script>alert('x')</script>") == "&lt;script&gt;alert(&#x27;x&#x27;)&lt;/script&gt;"
+    assert (
+        escape_html("<script>alert('x')</script>")
+        == "&lt;script&gt;alert(&#x27;x&#x27;)&lt;/script&gt;"
+    )
 
 
 def test_escape_html_escapes_quotes():
-    assert escape_html('"><img onerror=alert(1)>') == "&quot;&gt;&lt;img onerror=alert(1)&gt;"
+    assert (
+        escape_html('"><img onerror=alert(1)>')
+        == "&quot;&gt;&lt;img onerror=alert(1)&gt;"
+    )
 
 
 def test_escape_html_returns_none_for_none():

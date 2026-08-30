@@ -1,4 +1,5 @@
 import os
+
 import yaml
 
 from app.schema import ConfigValidationError, parse_dashboard

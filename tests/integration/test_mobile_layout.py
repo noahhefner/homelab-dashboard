@@ -18,6 +18,7 @@ def test_viewport_meta_present_for_mobile():
 
 # --- Desktop: bookmarks in a right-hand column (User Story 1) ---------------
 
+
 def test_services_use_main_area_grid_classes():
     html = _get_home_html()
     # Main apps area: full width on mobile, ~75% / left on desktop (lg+)
@@ -37,6 +38,7 @@ def test_columns_are_wrapped_in_a_row():
 
 # --- Mobile: bookmarks below the apps (User Story 2) ------------------------
 
+
 def test_mobile_stack_uses_full_width_columns():
     html = _get_home_html()
     # Both columns are col-12 below lg, so bookmarks stack below the apps.
@@ -55,6 +57,7 @@ def test_tiles_are_plain_anchors_tap_friendly():
 
 # --- Offline / vendored Bootstrap (user requirement) ------------------------
 
+
 def test_bootstrap_assets_served_locally():
     html = _get_home_html()
     assert "/static/bootstrap/css/bootstrap.min.css" in html
@@ -67,13 +70,19 @@ def test_no_remote_or_cdn_asset_urls():
     # Service logos (user-provided remote images, e.g. dashboardicons.com) are a
     # deliberate exception and are rendered as <img> elements, not CSS/JS assets.
     import re
+
     remote_links = re.findall(r'<link[^>]+href="(https?://[^"]+)"', html)
     remote_scripts = re.findall(r'<script[^>]+src="(https?://[^"]+)"', html)
-    assert remote_links == [], f"external CSS/JS links must not be loaded from CDN: {remote_links}"
-    assert remote_scripts == [], f"external CSS/JS scripts must not be loaded from CDN: {remote_scripts}"
+    assert remote_links == [], (
+        f"external CSS/JS links must not be loaded from CDN: {remote_links}"
+    )
+    assert remote_scripts == [], (
+        f"external CSS/JS scripts must not be loaded from CDN: {remote_scripts}"
+    )
 
 
 # --- Responsive reflow (User Story 3) ---------------------------------------
+
 
 def test_single_consistent_lg_breakpoint():
     html = _get_home_html()

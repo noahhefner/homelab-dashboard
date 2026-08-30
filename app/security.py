@@ -8,7 +8,7 @@ def validate_url(url):
         return False
     try:
         parsed = urlparse(url.strip())
-    except (ValueError, TypeError):
+    except ValueError, TypeError:
         return False
     if parsed.scheme not in ("http", "https"):
         return False

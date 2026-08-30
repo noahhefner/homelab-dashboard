@@ -16,8 +16,14 @@ def _write_config(tmpdir, data):
 def test_bookmark_groups_render_grouped(tmp_path):
     data = {
         "bookmark_groups": [
-            {"name": "Media", "bookmarks": [{"label": "YouTube", "url": "https://youtube.com"}]},
-            {"name": "Finance", "bookmarks": [{"label": "Bank", "url": "https://bank.com"}]},
+            {
+                "name": "Media",
+                "bookmarks": [{"label": "YouTube", "url": "https://youtube.com"}],
+            },
+            {
+                "name": "Finance",
+                "bookmarks": [{"label": "Bank", "url": "https://bank.com"}],
+            },
         ]
     }
     app = create_app(config_path=_write_config(tmp_path, data))
@@ -32,7 +38,10 @@ def test_bookmark_groups_render_grouped(tmp_path):
 def test_large_number_of_bookmarks_renders(tmp_path):
     groups = []
     for g in range(5):
-        bookmarks = [{"label": f"B{g}-{i}", "url": f"https://example.com/{g}/{i}"} for i in range(30)]
+        bookmarks = [
+            {"label": f"B{g}-{i}", "url": f"https://example.com/{g}/{i}"}
+            for i in range(30)
+        ]
         groups.append({"name": f"Group {g}", "bookmarks": bookmarks})
 
     app = create_app(config_path=_write_config(tmp_path, {"bookmark_groups": groups}))
@@ -46,10 +55,15 @@ def test_large_number_of_bookmarks_renders(tmp_path):
 def test_collapsed_group_renders_default_collapsed_marker(tmp_path):
     data = {
         "bookmark_groups": [
-            {"name": "Media", "collapsed": True, "bookmarks": [
-                {"label": "YouTube", "url": "https://youtube.com"}]},
-            {"name": "Finance", "bookmarks": [
-                {"label": "Bank", "url": "https://bank.com"}]},
+            {
+                "name": "Media",
+                "collapsed": True,
+                "bookmarks": [{"label": "YouTube", "url": "https://youtube.com"}],
+            },
+            {
+                "name": "Finance",
+                "bookmarks": [{"label": "Bank", "url": "https://bank.com"}],
+            },
         ]
     }
     app = create_app(config_path=_write_config(tmp_path, data))

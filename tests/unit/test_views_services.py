@@ -1,4 +1,3 @@
-import tempfile
 from pathlib import Path
 
 import pytest
@@ -18,7 +17,11 @@ def client_with_services(tmpdir):
     data = {
         "title": "Test Lab",
         "services": [
-            {"name": "Plex", "url": "https://plex.lan:32400", "icon": "https://cdn.example.com/plex.png"},
+            {
+                "name": "Plex",
+                "url": "https://plex.lan:32400",
+                "icon": "https://cdn.example.com/plex.png",
+            },
             {"name": "Nextcloud", "url": "https://cloud.lan", "icon": "nextcloud"},
             {"name": "<script>alert('x')</script>", "url": "https://unsafe.lan"},
         ],
@@ -55,11 +58,12 @@ def test_service_names_are_html_escaped(client_with_services):
 
 def test_service_links_open_in_new_tab(client_with_services):
     html = client_with_services.get("/").get_data(as_text=True)
-    assert "target=\"_blank\"" in html
+    assert 'target="_blank"' in html
     assert "noopener" in html
 
 
 # --- Service logos: any remote URL renders as a logo image (US1) ------------
+
 
 def test_service_with_any_remote_url_icon_renders_img_logo(tmpdir):
     url = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg"
@@ -91,7 +95,11 @@ def test_non_url_icon_renders_monogram_not_img(tmpdir):
 def test_unsafe_icon_value_not_rendered_as_img_src(tmpdir):
     data = {
         "services": [
-            {"name": "Unsafe", "url": "https://unsafe.lan", "icon": "javascript:alert(1)"},
+            {
+                "name": "Unsafe",
+                "url": "https://unsafe.lan",
+                "icon": "javascript:alert(1)",
+            },
         ]
     }
     app = create_app(config_path=_write_config(tmpdir, data))

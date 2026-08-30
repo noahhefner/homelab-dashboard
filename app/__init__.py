@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 
-from app.config import ConfigLoader, DEFAULT_CONFIG_PATH
+from app.config import DEFAULT_CONFIG_PATH, ConfigLoader
 from app.security import validate_url
 
 

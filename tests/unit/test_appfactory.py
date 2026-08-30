@@ -1,8 +1,6 @@
 import os
 import tempfile
 
-import pytest
-
 from app import create_app
 from app.config import DEFAULT_CONFIG_PATH
 

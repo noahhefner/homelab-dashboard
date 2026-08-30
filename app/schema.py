@@ -60,7 +60,9 @@ def _parse_group(data, index):
         raise ConfigValidationError(f"{where}.bookmarks must be a list")
     for bindex, bdata in enumerate(raw_bookmarks):
         bookmarks.append(_parse_bookmark(bdata, bindex))
-    return BookmarkGroup(name=name, bookmarks=bookmarks, icon=icon, collapsed=bool(collapsed))
+    return BookmarkGroup(
+        name=name, bookmarks=bookmarks, icon=icon, collapsed=bool(collapsed)
+    )
 
 
 def parse_dashboard(data):

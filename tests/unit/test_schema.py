@@ -81,7 +81,11 @@ def test_non_mapping_root_raises():
 def test_missing_bookmark_label_raises():
     with pytest.raises(ConfigValidationError):
         parse_dashboard(
-            {"bookmark_groups": [{"name": "G", "bookmarks": [{"url": "https://x.com"}]}]}
+            {
+                "bookmark_groups": [
+                    {"name": "G", "bookmarks": [{"url": "https://x.com"}]}
+                ]
+            }
         )
 
 

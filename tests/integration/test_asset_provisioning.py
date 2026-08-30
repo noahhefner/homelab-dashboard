@@ -26,6 +26,7 @@ def provisioned():
 
 # --- US1: provisioning correctness ------------------------------------------
 
+
 def test_provisioned_assets_exist(provisioned):
     assert (ROOT / ASSET_CSS).is_file()
     assert (ROOT / ASSET_JS).is_file()
@@ -35,6 +36,7 @@ def test_provisioned_assets_exist(provisioned):
 
 
 # --- US2: declarative, pinned version ---------------------------------------
+
 
 def test_reprovision_is_idempotent(provisioned):
     first_css = (ROOT / ASSET_CSS).read_bytes()
@@ -53,6 +55,7 @@ def test_reprovision_is_idempotent(provisioned):
 
 # --- US3: assets stay out of version control --------------------------------
 
+
 def test_provisioned_assets_are_gitignored(provisioned):
     checks = subprocess.run(
         ["git", "check-ignore", str(ROOT / ASSET_CSS)],
@@ -68,7 +71,9 @@ def test_provisioned_assets_are_gitignored(provisioned):
         capture_output=True,
         text=True,
     )
-    assert icons_checks.returncode == 0, "expected the Bootstrap Icons CSS asset to be gitignored"
+    assert icons_checks.returncode == 0, (
+        "expected the Bootstrap Icons CSS asset to be gitignored"
+    )
 
 
 def test_manifest_and_lockfile_are_tracked(provisioned):
@@ -83,6 +88,7 @@ def test_manifest_and_lockfile_are_tracked(provisioned):
 
 
 # --- Bootstrap Icons: pinned dependency + provisioned (feature 005) ----------
+
 
 def test_bootstrap_icons_dependency_is_tracked(provisioned):
     out = subprocess.run(

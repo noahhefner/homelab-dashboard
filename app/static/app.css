@@ -38,12 +38,14 @@ body {
   color: inherit;
 }
 
-.theme-toggle {
+.theme-toggle,
+.github-link {
   color: inherit;
   font-size: 1.25rem;
 }
 
-.theme-toggle:hover {
+.theme-toggle:hover,
+.github-link:hover {
   color: var(--monogram-bg);
 }
 
@@ -104,35 +106,6 @@ body {
   line-height: 1.2;
 }
 
-/* Bookmarks sidebar: rendered as a Bootstrap accordion (always-open variant),
-   one item per bookmark group. Open/closed default comes from each group's
-   `collapsed` config value. */
-.bookmark-accordion {
-  --bs-accordion-border-color: var(--tile-border);
-  --bs-accordion-btn-color: inherit;
-  --bs-accordion-active-color: inherit;
-}
-
-.bookmark-accordion .accordion-item {
-  background: var(--tile-bg);
-  color: inherit;
-}
-
-.bookmark-accordion .accordion-button {
-  font-weight: 600;
-  color: inherit;
-  background: var(--tile-bg);
-  box-shadow: none;
-}
-
-.bookmark-accordion .accordion-button:not(.collapsed) {
-  color: inherit;
-  background: var(--tile-bg);
-}
-
-.bookmark-accordion .accordion-body {
-  padding: 0.35rem 0.75rem 0.75rem;
-}
 
 .group-title {
   min-width: 0;
@@ -143,15 +116,6 @@ body {
   list-style: none;
   margin: 0;
   padding: 0;
-  border-top: 1px solid var(--tile-border);
-}
-
-.bookmark-list li {
-  border-bottom: 1px solid var(--list-border);
-}
-
-.bookmark-list li:last-child {
-  border-bottom: none;
 }
 
 .bookmark-link {

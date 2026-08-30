@@ -15,8 +15,14 @@ def test_groups_have_toggle_buttons(tmp_path):
     path = tmp_path / "config.yaml"
     path.write_text(
         yaml.safe_dump(
-            {"bookmark_groups": [{"name": "Media", "bookmarks": [
-                {"label": "YT", "url": "https://youtube.com"}]}]},
+            {
+                "bookmark_groups": [
+                    {
+                        "name": "Media",
+                        "bookmarks": [{"label": "YT", "url": "https://youtube.com"}],
+                    }
+                ]
+            },
             sort_keys=False,
         ),
         encoding="utf-8",
@@ -35,8 +41,14 @@ def test_groups_have_stable_state_key(tmp_path):
     path = tmp_path / "config.yaml"
     path.write_text(
         yaml.safe_dump(
-            {"bookmark_groups": [{"name": "Finance", "bookmarks": [
-                {"label": "Bank", "url": "https://bank.com"}]}]},
+            {
+                "bookmark_groups": [
+                    {
+                        "name": "Finance",
+                        "bookmarks": [{"label": "Bank", "url": "https://bank.com"}],
+                    }
+                ]
+            },
             sort_keys=False,
         ),
         encoding="utf-8",

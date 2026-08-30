@@ -1,6 +1,5 @@
 import os
 import time
-from pathlib import Path
 
 import yaml
 
@@ -36,12 +35,15 @@ def test_loader_reloads_on_file_change(tmp_path):
     config, _ = loader.get()
     assert len(config.services) == 1
 
-    _write(cfg, {
-        "services": [
-            {"name": "A", "url": "https://a.lan"},
-            {"name": "B", "url": "https://b.lan"},
-        ]
-    })
+    _write(
+        cfg,
+        {
+            "services": [
+                {"name": "A", "url": "https://a.lan"},
+                {"name": "B", "url": "https://b.lan"},
+            ]
+        },
+    )
     _bump_mtime(cfg)
     time.sleep(0.01)
 
