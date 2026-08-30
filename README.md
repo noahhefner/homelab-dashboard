@@ -4,6 +4,8 @@ A self-hosted, single-page dashboard homepage for your home server. It renders y
 services and grouped bookmarks from one YAML file, served by a small Flask app inside a
 single Docker container. No database, no authentication — just config.
 
+<img width="1344" height="746" alt="image" src="https://github.com/user-attachments/assets/0322bad7-be54-44b8-9a9c-8213819455f6" />
+
 ## Features
 
 - **Navbar**: a persistent Bootstrap navbar at the top with a configurable brand title
