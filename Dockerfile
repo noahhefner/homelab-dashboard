@@ -35,6 +35,7 @@ RUN uv sync --frozen --no-dev --no-install-project
 
 # Copy the provisioned Bootstrap assets from the Node stage.
 COPY --from=bootstrap-assets /build/app/static/bootstrap ./app/static/bootstrap
+COPY --from=bootstrap-assets /build/app/static/bootstrap-icons ./app/static/bootstrap-icons
 
 # Copy the application.
 COPY app ./app

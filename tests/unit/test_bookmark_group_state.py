@@ -61,3 +61,16 @@ def test_app_js_implements_localstorage_persistence():
     assert "bootstrap.Collapse" in source
     assert "show.bs.collapse" in source
     assert "hide.bs.collapse" in source
+
+
+def test_app_js_prefers_saved_choice_over_config_default():
+    source = APP_JS.read_text(encoding="utf-8")
+    # The client reads the per-group config default from the rendered data
+    # attribute emitted by the server.
+    assert "data-default-collapsed" in source
+    # A saved user choice is read as nullable so the code can distinguish "no
+    # saved choice" from "explicitly saved open".
+    assert "readPersistedOrNull" in source
+    # The applied initial state prefers a saved choice, falling back to the
+    # config default only when none exists.
+    assert "saved !== null ? saved : defaultCollapsed" in source

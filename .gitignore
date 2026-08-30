@@ -6,6 +6,7 @@ __pycache__/
 venv/
 dist/
 build/
+.pytest_cache/
 
 # Docker
 *.log
@@ -15,6 +16,7 @@ node_modules/
 
 # Provisioned Bootstrap assets (populated by pnpm provision)
 app/static/bootstrap/
+app/static/bootstrap-icons/
 
 # Universal
 .DS_Store

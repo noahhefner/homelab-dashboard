@@ -6,9 +6,13 @@ single Docker container. No database, no authentication — just config.
 
 ## Features
 
+- **Navbar**: a persistent Bootstrap navbar at the top with a configurable brand title
+  (left) and a dark-mode toggle (right).
+- **Dark mode**: switchable light/dark themes via a toggle; your choice persists across
+  visits and defaults to your system preference.
 - **Services**: clickable tiles that open in a new tab (icon image or monogram fallback).
-- **Bookmark groups**: named groups with collapsible/expandable bookmarks; collapsed state
-  persists across visits via `localStorage`.
+- **Bookmark groups**: named groups with collapsible/expandable bookmarks (Bootstrap Icon
+  chevron indicators); collapsed state persists across visits via `localStorage`.
 - **Live reload**: edit the YAML file and refresh the browser — no restart needed.
 - **Mobile responsive**: reflows to no-horizontal-scroll layout on phones; tap-friendly.
 - **One config file**: everything is defined in a single YAML document.
@@ -37,6 +41,7 @@ services:
 bookmark_groups:
   - name: Media
     icon: play      # optional
+    collapsed: true  # optional; start the group collapsed on load (default: open)
     bookmarks:
       - label: YouTube
         url: "https://www.youtube.com"
@@ -46,6 +51,12 @@ bookmark_groups:
 
 - `icon` is treated as an image URL if it is a valid `http(s)` URL; otherwise the first
   letter of the name is shown as a monogram.
+- `collapsed: true` makes a bookmark group start closed when the page loads; omitted
+  (or `false`) groups start open. A user who manually expands/collapses a group
+  overrides this default in their own browser.
+- `title` sets the dashboard name shown in the navbar. If omitted, empty, or whitespace-only,
+  the default **"Homelab"** is shown.
+- The moon/sun button in the navbar toggles dark mode; your choice is remembered.
 - When `CONFIG_PATH` is unset, it defaults to `config/example.yaml` (relative to the
   working directory).
 
@@ -71,10 +82,10 @@ services:
 
 ## Bootstrap Assets
 
-The Bootstrap CSS/JS are **not** committed to source control. They are tracked as a
-dependency in [`package.json`](package.json) (pinned version) with `pnpm`, and
-provisioned into `app/static/bootstrap/` by copying the compiled files from the
-installed package.
+The Bootstrap and Bootstrap Icons assets are **not** committed to source control. They are
+tracked as dependencies in [`package.json`](package.json) (pinned versions) with `pnpm`,
+and provisioned into `app/static/` by copying the compiled files from the installed
+packages.
 
 Provision on a fresh checkout:
 
@@ -83,7 +94,8 @@ pnpm setup        # = pnpm install && pnpm provision
 ```
 
 After provisioning, `app/static/bootstrap/css/bootstrap.min.css` and
-`app/static/bootstrap/js/bootstrap.bundle.min.js` exist and the page is styled.
+`app/static/bootstrap/js/bootstrap.bundle.min.js` exist, plus the Bootstrap Icons CSS and
+fonts under `app/static/bootstrap-icons/`, and the page is styled.
 
 To **update the Bootstrap version**:
 
@@ -91,6 +103,9 @@ To **update the Bootstrap version**:
 pnpm add bootstrap@X.Y.Z   # updates package.json + pnpm-lock.yaml
 pnpm provision             # replaces the assets with the new version
 ```
+
+To **update Bootstrap Icons** the same way: `pnpm add bootstrap-icons@X.Y.Z` then
+`pnpm provision`.
 
 The manifest (`package.json`) and lockfile (`pnpm-lock.yaml`) are tracked; the
 downloaded assets (`node_modules/`, `app/static/bootstrap/`) are gitignored.

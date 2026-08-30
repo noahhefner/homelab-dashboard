@@ -1,5 +1,5 @@
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan at
-`specs/004-service-logos/plan.md`
+`specs/006-bookmark-group-default-state/plan.md`
 <!-- SPECKIT END -->

@@ -1,19 +1,30 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{ title }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-icons/bootstrap-icons.min.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
   </head>
   <body>
-    <div class="container py-4">
-      <header class="mb-4">
-        <h1 class="display-5 text-center text-uppercase fw-semibold mb-0">{{ title }}</h1>
-      </header>
+    <nav class="navbar app-navbar navbar-expand" aria-label="Primary">
+      <div class="container">
+        <span class="navbar-brand app-brand">{{ title }}</span>
+        <div class="ms-auto d-flex align-items-center">
+          <button type="button"
+                  class="btn btn-link nav-link theme-toggle p-1"
+                  data-theme-toggle
+                  aria-label="Toggle dark mode">
+            <i class="bi bi-moon-stars theme-icon" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
 
-      <main>
+    <main>
+      <div class="container py-4">
         <div class="row g-4">
           <!-- Services: main area, full width on mobile, left ~75% on desktop (lg+) -->
           <section aria-label="Services" class="col-12 col-lg-9">
@@ -45,41 +56,47 @@
           <!-- Bookmarks: below the apps on mobile, right column on desktop (lg+) -->
           <aside aria-label="Bookmarks" class="col-12 col-lg-3">
             {% if bookmark_groups %}
-            {% for group in bookmark_groups %}
-            <div class="bookmark-group mb-3">
-              <button type="button"
-                      class="group-toggle"
-                      data-group-id="{{ group.name }}"
-                      data-group-toggle
-                      data-bs-toggle="collapse"
-                      data-bs-target="#bookmark-group-{{ loop.index }}">
-                <span class="group-title">{{ group.name }}</span>
-                <span class="group-caret" aria-hidden="true">▾</span>
-              </button>
-              <div class="collapse" id="bookmark-group-{{ loop.index }}"
-                   data-group-content>
-                <ul class="bookmark-list">
-                  {% for bookmark in group.bookmarks %}
-                  <li>
-                    <a href="{{ bookmark.url }}"
-                       class="bookmark-link"
-                       target="_blank"
-                       rel="noopener noreferrer">
-                      {{ bookmark.label }}
-                    </a>
-                  </li>
-                  {% endfor %}
-                </ul>
+            <div class="accordion bookmark-accordion" id="bookmark-accordion">
+              {% for group in bookmark_groups %}
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="bookmark-heading-{{ loop.index }}">
+                  <button type="button"
+                          class="accordion-button {{ 'collapsed' if group.collapsed }}"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#bookmark-collapse-{{ loop.index }}"
+                          aria-expanded="{{ 'false' if group.collapsed else 'true' }}"
+                          aria-controls="bookmark-collapse-{{ loop.index }}">
+                    {{ group.name }}
+                  </button>
+                </h2>
+                <div id="bookmark-collapse-{{ loop.index }}"
+                     class="accordion-collapse collapse {{ 'show' if not group.collapsed }}"
+>
+                  <div class="accordion-body">
+                    <ul class="bookmark-list">
+                      {% for bookmark in group.bookmarks %}
+                      <li>
+                        <a href="{{ bookmark.url }}"
+                           class="bookmark-link"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                          {{ bookmark.label }}
+                        </a>
+                      </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                </div>
               </div>
+              {% endfor %}
             </div>
-            {% endfor %}
             {% else %}
             <p class="text-muted">No bookmarks configured yet.</p>
             {% endif %}
           </aside>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
 
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='app.js') }}"></script>

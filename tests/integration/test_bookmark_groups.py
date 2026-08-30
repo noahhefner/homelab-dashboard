@@ -41,3 +41,21 @@ def test_large_number_of_bookmarks_renders(tmp_path):
     for g in range(5):
         assert f"Group {g}" in html
         assert f"B{g}-29" in html
+
+
+def test_collapsed_group_renders_default_collapsed_marker(tmp_path):
+    data = {
+        "bookmark_groups": [
+            {"name": "Media", "collapsed": True, "bookmarks": [
+                {"label": "YouTube", "url": "https://youtube.com"}]},
+            {"name": "Finance", "bookmarks": [
+                {"label": "Bank", "url": "https://bank.com"}]},
+        ]
+    }
+    app = create_app(config_path=_write_config(tmp_path, data))
+    html = app.test_client().get("/").get_data(as_text=True)
+
+    # The collapsed group's toggle carries a collapsed default; the unset group
+    # carries the open default.
+    assert 'data-default-collapsed="true"' in html
+    assert 'data-default-collapsed="false"' in html

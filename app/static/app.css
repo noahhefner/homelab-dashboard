@@ -5,10 +5,46 @@
   --tile-radius: 12px;
   --tile-border: #e5e7eb;
   --text-muted: #6b7280;
+  --navbar-bg: #f8f9fa;
+  --navbar-border: #e5e7eb;
+  --list-border: #f0f0f0;
+  --page-bg: #f8f9fa;
+}
+
+[data-bs-theme="dark"] {
+  --monogram-bg: #4f8bfa;
+  --monogram-fg: #ffffff;
+  --tile-bg: #1e293b;
+  --tile-border: #334155;
+  --text-muted: #94a3b8;
+  --navbar-bg: #0f172a;
+  --navbar-border: #1e293b;
+  --list-border: #334155;
+  --page-bg: #111827;
 }
 
 body {
-  background-color: #f8f9fa;
+  background-color: var(--page-bg);
+}
+
+/* Navbar */
+.app-navbar {
+  background-color: var(--navbar-bg);
+  border-bottom: 1px solid var(--navbar-border);
+}
+
+.app-navbar .navbar-brand.app-brand {
+  font-weight: 600;
+  color: inherit;
+}
+
+.theme-toggle {
+  color: inherit;
+  font-size: 1.25rem;
+}
+
+.theme-toggle:hover {
+  color: var(--monogram-bg);
 }
 
 .app-tile {
@@ -68,32 +104,34 @@ body {
   line-height: 1.2;
 }
 
-/* Bookmarks sidebar */
-.bookmark-group {
-  border: 1px solid var(--tile-border);
-  border-radius: var(--tile-radius);
-  padding: 0.5rem 0.75rem;
+/* Bookmarks sidebar: rendered as a Bootstrap accordion (always-open variant),
+   one item per bookmark group. Open/closed default comes from each group's
+   `collapsed` config value. */
+.bookmark-accordion {
+  --bs-accordion-border-color: var(--tile-border);
+  --bs-accordion-btn-color: inherit;
+  --bs-accordion-active-color: inherit;
+}
+
+.bookmark-accordion .accordion-item {
   background: var(--tile-bg);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: inherit;
 }
 
-.group-toggle {
-  width: 100%;
-  text-align: left;
-  font-size: 1.1rem;
+.bookmark-accordion .accordion-button {
   font-weight: 600;
-  padding: 0.5rem 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: none;
-  background: none;
   color: inherit;
-  cursor: pointer;
+  background: var(--tile-bg);
+  box-shadow: none;
 }
 
-.group-toggle:hover {
+.bookmark-accordion .accordion-button:not(.collapsed) {
   color: inherit;
+  background: var(--tile-bg);
+}
+
+.bookmark-accordion .accordion-body {
+  padding: 0.35rem 0.75rem 0.75rem;
 }
 
 .group-title {
@@ -101,25 +139,15 @@ body {
   overflow-wrap: anywhere;
 }
 
-.group-caret {
-  transition: transform 0.15s ease;
-  color: var(--text-muted);
-}
-
-.group-toggle[aria-expanded="false"] .group-caret,
-.group-toggle.collapsed .group-caret {
-  transform: rotate(-90deg);
-}
-
 .bookmark-list {
   list-style: none;
-  margin: 0.25rem 0 0;
+  margin: 0;
   padding: 0;
   border-top: 1px solid var(--tile-border);
 }
 
 .bookmark-list li {
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--list-border);
 }
 
 .bookmark-list li:last-child {
@@ -139,13 +167,6 @@ body {
 .bookmark-link:hover {
   color: var(--monogram-bg);
   text-decoration: none;
-}
-
-/* Desktop: separate the bookmark sidebar from the services column */
-@media (min-width: 992px) {
-  .bookmark-group {
-    margin-bottom: 1rem;
-  }
 }
 
 /* Mobile refinements: comfortable touch targets and tighter padding on small screens */
@@ -174,10 +195,5 @@ body {
   .service-name,
   .bookmark-link {
     font-size: 0.8rem;
-  }
-
-  .group-toggle {
-    font-size: 1rem;
-    padding: 0.75rem 0;
   }
 }

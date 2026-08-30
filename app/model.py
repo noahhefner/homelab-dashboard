@@ -20,10 +20,11 @@ class BookmarkGroup:
     name: str
     bookmarks: list[Bookmark] = field(default_factory=list)
     icon: str | None = None
+    collapsed: bool = False
 
 
 @dataclass
 class DashboardConfig:
-    title: str = "Home Lab"
+    title: str = "Homelab"
     services: list[Service] = field(default_factory=list)
     bookmark_groups: list[BookmarkGroup] = field(default_factory=list)

@@ -51,13 +51,16 @@ def _parse_group(data, index):
     icon = data.get("icon")
     if icon is not None:
         icon = str(icon)
+    collapsed = data.get("collapsed")
+    if collapsed is not None and not isinstance(collapsed, bool):
+        raise ConfigValidationError(f"{where}.collapsed must be a boolean")
     bookmarks = []
     raw_bookmarks = data.get("bookmarks") or []
     if not isinstance(raw_bookmarks, list):
         raise ConfigValidationError(f"{where}.bookmarks must be a list")
     for bindex, bdata in enumerate(raw_bookmarks):
         bookmarks.append(_parse_bookmark(bdata, bindex))
-    return BookmarkGroup(name=name, bookmarks=bookmarks, icon=icon)
+    return BookmarkGroup(name=name, bookmarks=bookmarks, icon=icon, collapsed=bool(collapsed))
 
 
 def parse_dashboard(data):
@@ -67,9 +70,10 @@ def parse_dashboard(data):
     if not isinstance(data, dict):
         raise ConfigValidationError("top-level config must be a mapping")
 
-    title = data.get("title", "Home Lab")
-    if title is not None:
-        title = str(title)
+    raw_title = data.get("title")
+    title = str(raw_title).strip() if raw_title is not None else ""
+    if not title:
+        title = "Homelab"
 
     services = []
     raw_services = data.get("services") or []

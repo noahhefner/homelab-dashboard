@@ -27,15 +27,30 @@ def test_valid_full_config():
 
 def test_empty_config_returns_defaults():
     config = parse_dashboard({})
-    assert config.title == "Home Lab"
+    assert config.title == "Homelab"
     assert config.services == []
     assert config.bookmark_groups == []
 
 
 def test_none_config_returns_defaults():
     config = parse_dashboard(None)
-    assert config.title == "Home Lab"
+    assert config.title == "Homelab"
     assert config.services == []
+
+
+def test_blank_title_returns_default():
+    config = parse_dashboard({"title": "   "})
+    assert config.title == "Homelab"
+
+
+def test_empty_string_title_returns_default():
+    config = parse_dashboard({"title": ""})
+    assert config.title == "Homelab"
+
+
+def test_custom_title_is_preserved_and_stripped():
+    config = parse_dashboard({"title": "  My Lab  "})
+    assert config.title == "My Lab"
 
 
 def test_missing_service_name_raises():
@@ -67,4 +82,38 @@ def test_missing_bookmark_label_raises():
     with pytest.raises(ConfigValidationError):
         parse_dashboard(
             {"bookmark_groups": [{"name": "G", "bookmarks": [{"url": "https://x.com"}]}]}
+        )
+
+
+def test_group_collapsed_true_parses():
+    config = parse_dashboard(
+        {"bookmark_groups": [{"name": "G", "collapsed": True, "bookmarks": []}]}
+    )
+    assert config.bookmark_groups[0].collapsed is True
+
+
+def test_group_collapsed_false_or_absent_is_open():
+    config = parse_dashboard(
+        {
+            "bookmark_groups": [
+                {"name": "G1", "collapsed": False, "bookmarks": []},
+                {"name": "G2", "bookmarks": []},
+            ]
+        }
+    )
+    assert config.bookmark_groups[0].collapsed is False
+    assert config.bookmark_groups[1].collapsed is False
+
+
+def test_group_collapsed_null_is_open():
+    config = parse_dashboard(
+        {"bookmark_groups": [{"name": "G", "collapsed": None, "bookmarks": []}]}
+    )
+    assert config.bookmark_groups[0].collapsed is False
+
+
+def test_group_collapsed_non_boolean_raises():
+    with pytest.raises(ConfigValidationError):
+        parse_dashboard(
+            {"bookmark_groups": [{"name": "G", "collapsed": "yes", "bookmarks": []}]}
         )
