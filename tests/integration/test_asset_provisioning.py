@@ -19,6 +19,7 @@ def provisioned():
         cwd=str(ROOT),
         capture_output=True,
         text=True,
+        check=False,
     )
     assert result.returncode == 0, result.stderr
     return ROOT
@@ -45,6 +46,7 @@ def test_reprovision_is_idempotent(provisioned):
         cwd=str(ROOT),
         capture_output=True,
         text=True,
+        check=False,
     )
     assert result.returncode == 0, result.stderr
     assert (ROOT / ASSET_CSS).read_bytes() == first_css
@@ -62,6 +64,7 @@ def test_provisioned_assets_are_gitignored(provisioned):
         cwd=str(ROOT),
         capture_output=True,
         text=True,
+        check=False,
     )
     assert checks.returncode == 0, "expected the CSS asset to be gitignored"
 
@@ -70,6 +73,7 @@ def test_provisioned_assets_are_gitignored(provisioned):
         cwd=str(ROOT),
         capture_output=True,
         text=True,
+        check=False,
     )
     assert icons_checks.returncode == 0, (
         "expected the Bootstrap Icons CSS asset to be gitignored"
@@ -82,6 +86,7 @@ def test_manifest_and_lockfile_are_tracked(provisioned):
         cwd=str(ROOT),
         capture_output=True,
         text=True,
+        check=False,
     )
     assert "package.json" in out.stdout
     assert "pnpm-lock.yaml" in out.stdout
@@ -96,6 +101,7 @@ def test_bootstrap_icons_dependency_is_tracked(provisioned):
         cwd=str(ROOT),
         capture_output=True,
         text=True,
+        check=False,
     )
     assert "package.json" in out.stdout
     pkg = (ROOT / "package.json").read_text()

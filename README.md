@@ -40,17 +40,18 @@ services:
 
 bookmark_groups:
   - name: Media
-    icon: play      # optional
     collapsed: true  # optional; start the group collapsed on load (default: open)
     bookmarks:
       - label: YouTube
         url: "https://www.youtube.com"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/youtube.svg"  # optional; shown next to the label
       - label: Spotify
         url: "https://open.spotify.com"
 ```
 
-- `icon` is treated as an image URL if it is a valid `http(s)` URL; otherwise the first
-  letter of the name is shown as a monogram.
+- A service `icon` is treated as an image URL if it is a valid `http(s)` URL; otherwise the
+  first letter of the name is shown as a monogram. A bookmark `icon` is the same: a valid
+  `http(s)` image URL shown next to the label, otherwise the text label alone is shown.
 - `collapsed: true` makes a bookmark group start closed when the page loads; omitted
   (or `false`) groups start open. A user who manually expands/collapses a group
   overrides this default in their own browser.
@@ -78,6 +79,33 @@ services:
   - name: Plex
     url: "https://plex.lan:32400"
     icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg"
+```
+
+## Bookmark Icons
+
+Each bookmark can show an icon next to its label by setting its `icon` to any valid remote
+image URL — just like service logos.
+
+- Any `http(s)` image URL works as a bookmark icon (e.g., your own CDN or static host), and
+  it is shown alongside the bookmark's text label.
+- If a bookmark icon is absent, not a valid URL, or fails to load, a circle with the first
+  letter of the label is shown in its place (a monogram), matching the homelab service
+  tiles — the page never breaks.
+- Short-word icon values (e.g., `icon: youtube` or `icon: play`) are **not** supported
+  anywhere in this project; always use a full image URL, or omit the `icon` field to show
+  the letter monogram.
+- To change a bookmark icon, edit the `icon` URL and refresh; no rebuild or restart is
+  needed.
+
+```yaml
+bookmark_groups:
+  - name: Media
+    bookmarks:
+      - label: YouTube
+        url: "https://www.youtube.com"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/youtube.svg"
+      - label: Spotify
+        url: "https://open.spotify.com"   # no icon -> a circle with "S"
 ```
 
 ## Bootstrap Assets
@@ -150,3 +178,23 @@ uv run pytest
 
 Runs the contract, unit, and integration suites (config validation, parsing, live reload,
 rendering, bookmark groups, and mobile layout).
+
+## Code Formatting and Linting
+
+**Python**
+
+```sh
+# Linting
+uv run ruff check
+uv run ruff check --fix
+# Formatting
+uv run ruff format
+# Type checking
+uv run ty check
+```
+
+**HTML Templates**
+
+```sh
+uv run djlint . --reformat --single-attribute-per-line
+```

@@ -258,3 +258,5 @@ bookmark_groups:
         url: "https://www.britannica.com"
       - label: Smithsonian
         url: "https://www.si.edu"
+      - label: NASA
+        url: "https://www.nasa.gov"

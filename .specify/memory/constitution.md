@@ -131,6 +131,7 @@ as a correctness requirement, not a remote-team concern.
   workflows or commands change (Principle I).
 - Candidate changes to governance, architecture boundaries, or shared contracts MUST be
   discussed before implementation to avoid rework.
+- Code MUST be formatted using the appropriate formatting tooling after each change.
 
 ## Governance
 

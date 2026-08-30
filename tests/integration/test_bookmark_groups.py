@@ -52,7 +52,7 @@ def test_large_number_of_bookmarks_renders(tmp_path):
         assert f"B{g}-29" in html
 
 
-def test_collapsed_group_renders_default_collapsed_marker(tmp_path):
+def test_collapsed_group_renders_collapsed_class(tmp_path):
     data = {
         "bookmark_groups": [
             {
@@ -69,7 +69,8 @@ def test_collapsed_group_renders_default_collapsed_marker(tmp_path):
     app = create_app(config_path=_write_config(tmp_path, data))
     html = app.test_client().get("/").get_data(as_text=True)
 
-    # The collapsed group's toggle carries a collapsed default; the unset group
-    # carries the open default.
-    assert 'data-default-collapsed="true"' in html
-    assert 'data-default-collapsed="false"' in html
+    # The collapsed group's toggle carries the Bootstrap `collapsed` class and
+    # its content omits `show`; the open group's content includes `show`.
+    assert 'class="accordion-button collapsed"' in html
+    assert 'class="accordion-collapse collapse "' in html
+    assert 'class="accordion-collapse collapse show"' in html

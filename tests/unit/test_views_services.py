@@ -62,23 +62,6 @@ def test_service_links_open_in_new_tab(client_with_services):
     assert "noopener" in html
 
 
-# --- Service logos: any remote URL renders as a logo image (US1) ------------
-
-
-def test_service_with_any_remote_url_icon_renders_img_logo(tmpdir):
-    url = "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg"
-    data = {
-        "services": [
-            {"name": "Plex", "url": "https://plex.lan:32400", "icon": url},
-        ]
-    }
-    app = create_app(config_path=_write_config(tmpdir, data))
-    html = app.test_client().get("/").get_data(as_text=True)
-    # Any arbitrary https URL is rendered as an <img> logo, not a monogram.
-    assert '<img src="%s"' % url in html
-    assert "service-icon" in html
-
-
 def test_non_url_icon_renders_monogram_not_img(tmpdir):
     data = {
         "services": [

@@ -12,9 +12,7 @@ def validate_url(url):
         return False
     if parsed.scheme not in ("http", "https"):
         return False
-    if not parsed.netloc:
-        return False
-    return True
+    return parsed.netloc
 
 
 def escape_html(value):

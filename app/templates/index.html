@@ -1,111 +1,127 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{{ title }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-icons/bootstrap-icons.min.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
-  </head>
-  <body>
-    <nav class="navbar app-navbar navbar-expand" aria-label="Primary">
-      <div class="container">
-        <span class="navbar-brand app-brand">{{ title }}</span>
-        <div class="ms-auto d-flex align-items-center gap-3">
-          <button type="button"
-                  class="btn btn-link nav-link theme-toggle p-1"
-                  data-theme-toggle
-                  aria-label="Toggle dark mode">
-            <i class="bi bi-moon-stars theme-icon" aria-hidden="true"></i>
-          </button>
-          <a href="https://github.com/noahhefner/homelab-dashboard"
-             class="btn btn-link nav-link github-link p-1"
-             target="_blank"
-             rel="noopener noreferrer"
-             aria-label="View source on GitHub">
-            <i class="bi bi-github" aria-hidden="true"></i>
-          </a>
-        </div>
-      </div>
-    </nav>
-
-    <main>
-      <div class="container py-4">
-        <div class="row g-4">
-          <!-- Services: main area, full width on mobile, left ~75% on desktop (lg+) -->
-          <section aria-label="Services" class="col-12 col-lg-9">
-            <div class="row g-3">
-              {% for service in services %}
-              <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                <a class="app-tile service-tile"
-                   href="{{ service.url }}"
-                   target="_blank"
-                   rel="noopener noreferrer">
-                  <div class="service-icon">
-                    {% if service.icon and service.icon is url %}
-                    <img src="{{ service.icon }}"
-                         alt="{{ service.name }}"
-                         loading="lazy"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                    <span class="service-monogram" style="display:none">{{ service.name[:1]|upper }}</span>
-                    {% else %}
-                    <span class="service-monogram">{{ service.name[:1]|upper }}</span>
-                    {% endif %}
-                  </div>
-                  <span class="service-name">{{ service.name }}</span>
-                </a>
-              </div>
-              {% endfor %}
-            </div>
-          </section>
-
-          <!-- Bookmarks: below the apps on mobile, right column on desktop (lg+) -->
-          <aside aria-label="Bookmarks" class="col-12 col-lg-3">
-            {% if bookmark_groups %}
-            <div class="accordion bookmark-accordion" id="bookmark-accordion">
-              {% for group in bookmark_groups %}
-              <div class="accordion-item">
-                <h2 class="accordion-header" id="bookmark-heading-{{ loop.index }}">
-                  <button type="button"
-                          class="accordion-button {{ 'collapsed' if group.collapsed }}"
-                          data-bs-toggle="collapse"
-                          data-bs-target="#bookmark-collapse-{{ loop.index }}"
-                          aria-expanded="{{ 'false' if group.collapsed else 'true' }}"
-                          aria-controls="bookmark-collapse-{{ loop.index }}">
-                    {{ group.name }}
-                  </button>
-                </h2>
-                <div id="bookmark-collapse-{{ loop.index }}"
-                     class="accordion-collapse collapse {{ 'show' if not group.collapsed }}"
->
-                  <div class="accordion-body">
-                    <ul class="bookmark-list">
-                      {% for bookmark in group.bookmarks %}
-                      <li>
-                        <a href="{{ bookmark.url }}"
-                           class="bookmark-link"
-                           target="_blank"
-                           rel="noopener noreferrer">
-                          {{ bookmark.label }}
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description"
+              content="Homelab dashboard with links to local services and bookmark groups." />
+        <title>{{ title }}</title>
+        <link rel="stylesheet"
+              href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
+        <link rel="stylesheet"
+              href="{{ url_for('static', filename='bootstrap-icons/bootstrap-icons.min.css') }}" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
+    </head>
+    <body>
+        <nav class="navbar app-navbar navbar-expand" aria-label="Primary">
+            <div class="container">
+                <span class="navbar-brand app-brand">{{ title }}</span>
+                <div class="ms-auto d-flex align-items-center gap-3">
+                    <button type="button"
+                            class="btn btn-link nav-link theme-toggle p-1"
+                            data-theme-toggle
+                            aria-label="Toggle dark mode">
+                        <i class="bi bi-moon-stars theme-icon" aria-hidden="true"></i>
+                    </button>
+                    {% if editing_enabled %}
+                        <a href="{{ url_for("dashboard.view_config") }}"
+                           class="btn btn-link nav-link config-link p-1"
+                           aria-label="Edit configuration"
+                           title="Edit configuration">
+                            <i class="bi bi-terminal" aria-hidden="true"></i>
                         </a>
-                      </li>
-                      {% endfor %}
-                    </ul>
-                  </div>
+                    {% endif %}
+                    <a href="https://github.com/noahhefner/homelab-dashboard"
+                       class="btn btn-link nav-link github-link p-1"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       aria-label="View source on GitHub">
+                        <i class="bi bi-github" aria-hidden="true"></i>
+                    </a>
                 </div>
-              </div>
-              {% endfor %}
             </div>
-            {% else %}
-            <p class="text-muted">No bookmarks configured yet.</p>
-            {% endif %}
-          </aside>
-        </div>
-      </div>
-    </main>
-
-    <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
-  </body>
+        </nav>
+        <main>
+            <div class="container py-4">
+                <div class="row g-4">
+                    <!-- Services: main area, full width on mobile, left ~75% on desktop (lg+) -->
+                    <section aria-label="Services" class="col-12 col-lg-9">
+                        <div class="row g-3">
+                            {% for service in services %}
+                                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
+                                    <a class="app-tile service-tile"
+                                       href="{{ service.url }}"
+                                       target="_blank"
+                                       rel="noopener noreferrer">
+                                        <div class="service-icon">
+                                            {% if service.icon and service.icon is url %}
+                                                <img src="{{ service.icon }}"
+                                                     alt="{{ service.name }}"
+                                                     loading="lazy"
+                                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                                <span class="service-monogram monogram-fallback">{{ service.name[:1]|upper }}</span>
+                                            {% else %}
+                                                <span class="service-monogram">{{ service.name[:1]|upper }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <span class="service-name">{{ service.name }}</span>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </section>
+                    <!-- Bookmarks: below the apps on mobile, right column on desktop (lg+) -->
+                    <aside aria-label="Bookmarks" class="col-12 col-lg-3">
+                        {% if bookmark_groups %}
+                            <div class="accordion bookmark-accordion" id="bookmark-accordion">
+                                {% for group in bookmark_groups %}
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="bookmark-heading-{{ loop.index }}">
+                                            <button type="button"
+                                                    class="accordion-button {{ 'collapsed' if group.collapsed }}"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#bookmark-collapse-{{ loop.index }}"
+                                                    aria-expanded="{{ 'false' if group.collapsed else 'true' }}"
+                                                    aria-controls="bookmark-collapse-{{ loop.index }}">{{ group.name }}</button>
+                                        </h2>
+                                        <div id="bookmark-collapse-{{ loop.index }}"
+                                             class="accordion-collapse collapse {{ 'show' if not group.collapsed }}">
+                                            <div class="accordion-body">
+                                                <ul class="bookmark-list">
+                                                    {% for bookmark in group.bookmarks %}
+                                                        <li>
+                                                            <a href="{{ bookmark.url }}"
+                                                               class="bookmark-link"
+                                                               target="_blank"
+                                                               rel="noopener noreferrer">
+                                                                {% if bookmark.icon and bookmark.icon is url %}
+                                                                    <img src="{{ bookmark.icon }}"
+                                                                         alt="{{ bookmark.label }}"
+                                                                         class="bookmark-icon"
+                                                                         loading="lazy"
+                                                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                                                    <span class="bookmark-monogram monogram-fallback">{{ bookmark.label[:1]|upper }}</span>
+                                                                {% else %}
+                                                                    <span class="bookmark-monogram">{{ bookmark.label[:1]|upper }}</span>
+                                                                {% endif %}
+                                                                <span class="bookmark-label">{{ bookmark.label }}</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-muted">No bookmarks configured yet.</p>
+                        {% endif %}
+                    </aside>
+                </div>
+            </div>
+        </main>
+        <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='app.js') }}"></script>
+    </body>
 </html>

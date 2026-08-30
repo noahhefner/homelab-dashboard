@@ -92,7 +92,7 @@ def test_service_logo_change_reflected_on_reload(tmp_path):
     client = app.test_client()
 
     # Initial: the logo <img> for logo_a is present.
-    assert 'src="%s"' % logo_a in client.get("/").get_data(as_text=True)
+    assert f'src="{logo_a}"' in client.get("/").get_data(as_text=True)
 
     # Change the logo to logo_b -> reflected on next request (no restart/rebuild).
     _write(
@@ -101,13 +101,13 @@ def test_service_logo_change_reflected_on_reload(tmp_path):
     _bump_mtime(cfg)
     time.sleep(0.01)
     html = client.get("/").get_data(as_text=True)
-    assert 'src="%s"' % logo_b in html
-    assert 'src="%s"' % logo_a not in html
+    assert f'src="{logo_b}"' in html
+    assert f'src="{logo_a}"' not in html
 
     # Remove the logo -> falls back to a monogram on reload.
     _write(cfg, {"services": [{"name": "Svc", "url": "https://svc.lan"}]})
     _bump_mtime(cfg)
     time.sleep(0.01)
     html = client.get("/").get_data(as_text=True)
-    assert 'src="%s"' % logo_b not in html
+    assert f'src="{logo_b}"' not in html
     assert '<span class="service-monogram">S</span>' in html

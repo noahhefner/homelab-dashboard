@@ -17,6 +17,18 @@ def load_dashboard_from_file(path):
     return parse_dashboard(data)
 
 
+_EDITOR_KEYS = ("editor", "edit_config")
+
+
+def _read_raw_config(path):
+    """Return the raw YAML text of a config file, or None if unreadable."""
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return f.read()
+    except OSError:
+        return None
+
+
 class ConfigLoader:
     """Loads the dashboard config from a single YAML file with live reload.
 
@@ -64,3 +76,26 @@ class ConfigLoader:
         human-readable string or None."""
         self._load_if_needed()
         return self._config, self._error
+
+    def editor_enabled(self):
+        """Return True only when the config explicitly sets the edit flag to true.
+
+        Default-deny (spec FR-010): absent, non-boolean, or false values never
+        enable editing. The flag is part of the same config but is read from the
+        raw YAML because parse_dashboard intentionally ignores unknown top-level
+        keys.
+        """
+        raw = _read_raw_config(self.path)
+        if raw is None:
+            return False
+        try:
+            data = yaml.safe_load(raw)
+        except yaml.YAMLError:
+            return False
+        if not isinstance(data, dict):
+            return False
+        for key in _EDITOR_KEYS:
+            value = data.get(key)
+            if isinstance(value, bool) and value is True:
+                return True
+        return False

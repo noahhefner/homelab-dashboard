@@ -1,15 +1,7 @@
-from pathlib import Path
-
 from app import create_app
 
-APP_JS = Path(__file__).resolve().parents[2] / "app" / "static" / "app.js"
 
-
-def _group_toggle_markup(data, client):
-    return client.get("/").get_data(as_text=True)
-
-
-def test_groups_have_toggle_buttons(tmp_path):
+def test_groups_have_collapse_toggle_and_content(tmp_path):
     import yaml
 
     path = tmp_path / "config.yaml"
@@ -30,12 +22,14 @@ def test_groups_have_toggle_buttons(tmp_path):
     app = create_app(config_path=str(path))
     html = app.test_client().get("/").get_data(as_text=True)
 
-    # A toggle button/control and an associated content wrapper are rendered
-    assert "data-group-toggle" in html
-    assert "data-group-content" in html
+    # Each group renders a Bootstrap collapse toggle button wired to a matching
+    # collapse target via Bootstrap's data attributes.
+    assert 'data-bs-toggle="collapse"' in html
+    assert 'data-bs-target="#bookmark-collapse-1"' in html
+    assert 'id="bookmark-collapse-1"' in html
 
 
-def test_groups_have_stable_state_key(tmp_path):
+def test_group_collapse_content_wired_to_target(tmp_path):
     import yaml
 
     path = tmp_path / "config.yaml"
@@ -56,33 +50,8 @@ def test_groups_have_stable_state_key(tmp_path):
     app = create_app(config_path=str(path))
     html = app.test_client().get("/").get_data(as_text=True)
 
-    # The JS persists state keyed by a stable group identifier so it survives
-    # across renames/refreshes.
-    assert 'data-group-id="Finance"' in html
-
-
-def test_app_js_implements_localstorage_persistence():
-    source = APP_JS.read_text(encoding="utf-8")
-    # Group state persists across visits via localStorage.
-    assert "localStorage" in source
-    # The toggle is wired via data attributes consumed by the JS.
-    assert "data-group-toggle" in source
-    # The collapse target is resolved from the toggle's data-bs-target.
-    assert "data-bs-target" in source
-    # Bootstrap Collapse drives show/hide; its events persist state.
-    assert "bootstrap.Collapse" in source
-    assert "show.bs.collapse" in source
-    assert "hide.bs.collapse" in source
-
-
-def test_app_js_prefers_saved_choice_over_config_default():
-    source = APP_JS.read_text(encoding="utf-8")
-    # The client reads the per-group config default from the rendered data
-    # attribute emitted by the server.
-    assert "data-default-collapsed" in source
-    # A saved user choice is read as nullable so the code can distinguish "no
-    # saved choice" from "explicitly saved open".
-    assert "readPersistedOrNull" in source
-    # The applied initial state prefers a saved choice, falling back to the
-    # config default only when none exists.
-    assert "saved !== null ? saved : defaultCollapsed" in source
+    # The toggle's data-bs-target refers to the group's collapse content, and
+    # the content wrapper carries the Bootstrap collapse classes.
+    assert 'data-bs-target="#bookmark-collapse-1"' in html
+    assert 'id="bookmark-collapse-1"' in html
+    assert 'class="accordion-collapse collapse' in html

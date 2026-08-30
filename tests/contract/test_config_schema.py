@@ -37,8 +37,10 @@ def test_example_yaml_parses_to_valid_config():
 
 
 def test_contract_fields(example_config_data):
-    # Per contract: root mapping, optional title/services/bookmark_groups
-    assert set(example_config_data) <= {"title", "services", "bookmark_groups"}
+    # Per contract: root mapping, optional title/services/bookmark_groups plus the
+    # feature-008 opt-in `editor`/`edit_config` flag (data-model.md).
+    allowed = {"title", "services", "bookmark_groups", "editor", "edit_config"}
+    assert set(example_config_data) <= allowed
 
 
 def test_contract_service_required_fields(example_config_data):

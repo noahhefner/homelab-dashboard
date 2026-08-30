@@ -14,8 +14,10 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "djlint>=1.44.2",
     "pytest>=8.0",
     "ruff>=0.16.5",
+    "ty>=0.0.75",
 ]
 
 [build-system]

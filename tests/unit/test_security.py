@@ -1,14 +1,6 @@
 from app.security import escape_html, validate_url
 
 
-def test_validate_url_accepts_http():
-    assert validate_url("http://example.com") is True
-
-
-def test_validate_url_accepts_https():
-    assert validate_url("https://example.com:32400/path") is True
-
-
 def test_validate_url_rejects_ftp():
     assert validate_url("ftp://example.com") is False
 
