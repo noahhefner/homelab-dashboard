@@ -3,7 +3,7 @@ from app import create_app
 
 def test_invalid_yaml_renders_error_page(tmp_path):
     cfg = tmp_path / "config.yaml"
-    cfg.write_text("services:\n  - name: [broken", encoding="utf-8")
+    cfg.write_text("tiles:\n  - name: [broken", encoding="utf-8")
 
     app = create_app(config_path=str(cfg))
     resp = app.test_client().get("/")
@@ -15,7 +15,7 @@ def test_invalid_yaml_renders_error_page(tmp_path):
 
 def test_missing_required_field_renders_error_page(tmp_path):
     cfg = tmp_path / "config.yaml"
-    cfg.write_text("services:\n  - url: https://example.com\n", encoding="utf-8")
+    cfg.write_text("tiles:\n  - url: https://example.com\n", encoding="utf-8")
 
     app = create_app(config_path=str(cfg))
     html = app.test_client().get("/").get_data(as_text=True)

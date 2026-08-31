@@ -19,7 +19,7 @@ def test_viewport_meta_present_for_mobile():
 # --- Desktop: bookmarks in a right-hand column (User Story 1) ---------------
 
 
-def test_services_use_main_area_grid_classes():
+def test_tiles_use_main_area_grid_classes():
     html = _get_home_html()
     # Main apps area: full width on mobile, ~75% / left on desktop (lg+)
     assert "col-12 col-lg-9" in html
@@ -42,14 +42,14 @@ def test_columns_are_wrapped_in_a_row():
 def test_mobile_stack_uses_full_width_columns():
     html = _get_home_html()
     # Both columns are col-12 below lg, so bookmarks stack below the apps.
-    assert 'class="col-12 col-lg-9"' in html  # services
+    assert 'class="col-12 col-lg-9"' in html  # tiles
     assert 'class="col-12 col-lg-3"' in html  # bookmarks
 
 
 def test_tiles_are_plain_anchors_tap_friendly():
     html = _get_home_html()
     # Navigation must not depend on hover; plain <a href> works on tap
-    assert 'class="app-tile service-tile"' in html
+    assert 'class="app-tile tile"' in html
     assert 'href="' in html
     assert 'target="_blank"' in html
     assert 'rel="noopener noreferrer"' in html
@@ -67,7 +67,7 @@ def test_bootstrap_assets_served_locally():
 def test_no_remote_or_cdn_asset_urls():
     html = _get_home_html()
     # The dashboard's CSS/JS must be served locally so it works without internet.
-    # Service logos (user-provided remote images, e.g. dashboardicons.com) are a
+    # Tile logos (user-provided remote images, e.g. dashboardicons.com) are a
     # deliberate exception and are rendered as <img> elements, not CSS/JS assets.
     import re
 

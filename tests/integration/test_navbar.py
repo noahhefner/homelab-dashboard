@@ -28,7 +28,7 @@ def test_navbar_brand_shows_configurable_title(tmp_path):
 
 
 def test_navbar_brand_shows_default_when_no_title(tmp_path):
-    app = create_app(config_path=_write_config(tmp_path, {"services": []}))
+    app = create_app(config_path=_write_config(tmp_path, {"tiles": []}))
     html = app.test_client().get("/").get_data(as_text=True)
 
     assert ">Homelab<" in html

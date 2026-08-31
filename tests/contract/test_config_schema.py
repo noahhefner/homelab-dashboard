@@ -32,23 +32,38 @@ def test_example_yaml_is_mapping():
 
 def test_example_yaml_parses_to_valid_config():
     config = load_dashboard_from_file(str(EXAMPLE_YAML))
-    assert config.services, "example config should have at least one service"
+    assert config.tiles, "example config should have at least one tile"
     assert config.bookmark_groups, "example config should have at least one group"
 
 
 def test_contract_fields(example_config_data):
-    # Per contract: root mapping, optional title/services/bookmark_groups plus the
-    # feature-008 opt-in `editor`/`edit_config` flag (data-model.md).
-    allowed = {"title", "services", "bookmark_groups", "editor", "edit_config"}
+    # Per contract: root mapping, optional title/tiles/tile_groups/bookmark_groups
+    # plus the feature-008 opt-in `editor`/`edit_config` flag (data-model.md).
+    allowed = {
+        "title",
+        "tiles",
+        "tile_groups",
+        "bookmark_groups",
+        "editor",
+        "edit_config",
+    }
     assert set(example_config_data) <= allowed
 
 
-def test_contract_service_required_fields(example_config_data):
-    for service in example_config_data.get("services", []):
-        assert service.get("name"), "service.name required"
-        assert re.match(r"^https?://", service.get("url", "")), (
-            "service.url must be http(s)"
-        )
+def test_contract_tile_required_fields(example_config_data):
+    for tile in example_config_data.get("tiles", []):
+        assert tile.get("name"), "tile.name required"
+        assert re.match(r"^https?://", tile.get("url", "")), "tile.url must be http(s)"
+
+
+def test_contract_tile_group_required_fields(example_config_data):
+    for group in example_config_data.get("tile_groups", []):
+        assert group.get("name"), "tile_group.name required"
+        for tile in group.get("tiles", []):
+            assert tile.get("name"), "tile_group.tiles[].name required"
+            assert re.match(r"^https?://", tile.get("url", "")), (
+                "tile_group.tiles[].url must be http(s)"
+            )
 
 
 def test_contract_bookmark_urls_http(example_config_data):
@@ -69,4 +84,4 @@ def example_config_data():
 def test_parse_dashboard_accepts_example_raw_data():
     data = _load_raw(EXAMPLE_YAML)
     config = parse_dashboard(data)
-    assert len(config.services) == len(data.get("services", []))
+    assert len(config.tiles) == len(data.get("tiles", []))

@@ -1,12 +1,12 @@
 # Homelab Dashboard
 
-A self-hosted, single-page dashboard homepage for your home server. It renders your services and grouped bookmarks from one YAML file, served by a small Flask app inside a single Docker container.
+A self-hosted, single-page dashboard homepage for your home server. It renders your tiles and grouped bookmarks from one YAML file, served by a small Flask app inside a single Docker container.
 
 <img width="1344" height="746" alt="image" src="https://github.com/user-attachments/assets/0322bad7-be54-44b8-9a9c-8213819455f6" />
 
 ## Features
 
-- **Services**: Clickable tiles that open in a new tab (icon image or monogram fallback).
+- **Tiles**: Clickable links that open in a new tab (icon image or monogram fallback). A tile can point to an internal homelab service or an external service (e.g., webmail, a cloud account portal).
 - **Bookmark groups**: Named groups with collapsible/expandable bookmarks.
 - **Live reload**: Edit the YAML file and refresh the browser — no restart needed.
 - **Mobile responsive**: reflows to no-horizontal-scroll layout on phones; tap-friendly.
@@ -28,12 +28,21 @@ Everything is configured in a YAML file. See [`config/example.yaml`](config/exam
 title: "Home Lab"  # Title of the page
 editor: true       # Enable / disable in-browser yaml editor
 
-# Put links to your homelab services here.
-services:
+# Tiles are links to your services. They can point to an internal homelab
+# service or an external service (e.g., webmail, a cloud account portal).
+tiles:
   - name: Plex
     url: "https://plex.lan:32400"
-    # Optional: Display an icon for the service.
+    # Optional: Display an icon for the tile.
     icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg"  
+
+# Tiles can also be organized into named groups. Tile groups are always
+# visible (no collapse/expand), unlike bookmark groups.
+tile_groups:
+  - name: Cloud & Webmail
+    tiles:
+      - name: Webmail
+        url: "https://mail.example.com"
 
 # Place your bookmarks here, organized with groups.
 bookmark_groups:

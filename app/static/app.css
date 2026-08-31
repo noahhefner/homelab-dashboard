@@ -74,7 +74,7 @@ body {
   text-decoration: none;
 }
 
-.service-icon {
+.tile-icon {
   width: 48px;
   height: 48px;
   display: flex;
@@ -83,13 +83,13 @@ body {
   margin-bottom: 0.5rem;
 }
 
-.service-icon img {
+.tile-icon img {
   width: 48px;
   height: 48px;
   object-fit: contain;
 }
 
-.service-monogram {
+.tile-monogram {
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -102,16 +102,33 @@ body {
   font-weight: 700;
 }
 
-.service-name {
+.tile-name {
   text-align: center;
   font-size: 0.9rem;
   line-height: 1.2;
 }
 
 
+/* Tile-group headers and the "Bookmarks" header share this base style. They are
+   slightly smaller than the default h3 (1.75rem) so they read as section labels. */
 .group-title {
   min-width: 0;
   overflow-wrap: anywhere;
+  font-size: 1.4rem;
+  line-height: 1.3;
+}
+
+/* Spacing around tile-group headers (which repeat mid-page). The "Bookmarks"
+   header sits at the top of the sidebar and needs no top spacing. */
+.tile-group .group-title {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* The "Bookmarks" header above the accordion: slight bottom spacing. */
+aside .group-title {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
 }
 
 .bookmark-list {
@@ -192,7 +209,7 @@ body {
 
 /* Mobile refinements: comfortable touch targets and tighter padding on small screens */
 @media (max-width: 575.98px) {
-  .service-tile,
+  .tile,
   .bookmark-link {
     min-height: 4.5rem;
   }
@@ -205,9 +222,9 @@ body {
     padding: 0.75rem 0.25rem;
   }
 
-  .service-icon,
-  .service-icon img,
-  .service-monogram {
+  .tile-icon,
+  .tile-icon img,
+  .tile-monogram {
     width: 40px;
     height: 40px;
     font-size: 1.25rem;
@@ -224,7 +241,7 @@ body {
     font-size: 0.6875rem;
   }
 
-  .service-name,
+  .tile-name,
   .bookmark-link {
     font-size: 0.8rem;
   }

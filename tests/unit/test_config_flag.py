@@ -10,49 +10,49 @@ def _write(path, data):
 
 def test_editor_disabled_by_default(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"services": [{"name": "One", "url": "https://one.lan"}]})
+    _write(cfg, {"tiles": [{"name": "One", "url": "https://one.lan"}]})
     loader = ConfigLoader(str(cfg))
     assert loader.editor_enabled() is False
 
 
 def test_editor_disabled_when_flag_absent(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"services": []})
+    _write(cfg, {"tiles": []})
     loader = ConfigLoader(str(cfg))
     assert loader.editor_enabled() is False
 
 
 def test_editor_enabled_when_flag_true(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"editor": True, "services": []})
+    _write(cfg, {"editor": True, "tiles": []})
     loader = ConfigLoader(str(cfg))
     assert loader.editor_enabled() is True
 
 
 def test_editor_disabled_when_flag_false(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"editor": False, "services": []})
+    _write(cfg, {"editor": False, "tiles": []})
     loader = ConfigLoader(str(cfg))
     assert loader.editor_enabled() is False
 
 
 def test_editor_disabled_when_flag_non_boolean(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"editor": "yes", "services": []})
+    _write(cfg, {"editor": "yes", "tiles": []})
     loader = ConfigLoader(str(cfg))
     assert loader.editor_enabled() is False
 
 
 def test_editor_enabled_when_edit_config_alias_true(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"edit_config": True, "services": []})
+    _write(cfg, {"edit_config": True, "tiles": []})
     loader = ConfigLoader(str(cfg))
     assert loader.editor_enabled() is True
 
 
 def test_get_config_read_only_when_disabled(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"services": [{"name": "One", "url": "https://one.lan"}]})
+    _write(cfg, {"tiles": [{"name": "One", "url": "https://one.lan"}]})
     app = create_app(config_path=str(cfg))
     client = app.test_client()
 
@@ -64,12 +64,12 @@ def test_get_config_read_only_when_disabled(tmp_path):
 
 def test_save_returns_403_when_disabled(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"services": [{"name": "One", "url": "https://one.lan"}]})
+    _write(cfg, {"tiles": [{"name": "One", "url": "https://one.lan"}]})
     original = cfg.read_text(encoding="utf-8")
     app = create_app(config_path=str(cfg))
     client = app.test_client()
 
-    resp = client.post("/config/save", json={"content": "title: Changed\nservices: []\n"})
+    resp = client.post("/config/save", json={"content": "title: Changed\ntiles: []\n"})
     assert resp.status_code == 403
     assert "disabled" in resp.get_json()["error"].lower()
     assert cfg.read_text(encoding="utf-8") == original
@@ -77,7 +77,7 @@ def test_save_returns_403_when_disabled(tmp_path):
 
 def test_save_empty_content_returns_400_when_enabled(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"editor": True, "services": []})
+    _write(cfg, {"editor": True, "tiles": []})
     app = create_app(config_path=str(cfg))
     client = app.test_client()
 
