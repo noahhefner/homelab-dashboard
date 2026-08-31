@@ -29,4 +29,5 @@ Thumbs.db
 
 # Config files
 local.yaml
+local.yaml.backup.yaml
 example.yaml.backup.yaml
