@@ -3,23 +3,45 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description"
-              content="Homelab dashboard with links to local tiles and bookmark groups." />
+        <meta
+            name="description"
+            content="Homelab dashboard with links to local tiles and bookmark groups."
+        />
         <title>{{ title }}</title>
-        <link rel="icon" type="image/x-icon"
-              href="{{ url_for('static', filename='favicon_io/favicon.ico') }}" />
-        <link rel="icon" type="image/png" sizes="32x32"
-              href="{{ url_for('static', filename='favicon_io/favicon-32x32.png') }}" />
-        <link rel="icon" type="image/png" sizes="16x16"
-              href="{{ url_for('static', filename='favicon_io/favicon-16x16.png') }}" />
-        <link rel="apple-touch-icon" sizes="180x180"
-              href="{{ url_for('static', filename='favicon_io/apple-touch-icon.png') }}" />
-        <link rel="manifest"
-              href="{{ url_for('static', filename='favicon_io/site.webmanifest') }}" />
-        <link rel="stylesheet"
-              href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
-        <link rel="stylesheet"
-              href="{{ url_for('static', filename='bootstrap-icons/bootstrap-icons.min.css') }}" />
+        <link
+            rel="icon"
+            type="image/x-icon"
+            href="{{ url_for('static', filename='favicon_io/favicon.ico') }}"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="{{ url_for('static', filename='favicon_io/favicon-32x32.png') }}"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="{{ url_for('static', filename='favicon_io/favicon-16x16.png') }}"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="{{ url_for('static', filename='favicon_io/apple-touch-icon.png') }}"
+        />
+        <link
+            rel="manifest"
+            href="{{ url_for('static', filename='favicon_io/site.webmanifest') }}"
+        />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"
+        />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='bootstrap-icons/bootstrap-icons.min.css') }}"
+        />
         <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
     </head>
     <body>
@@ -27,25 +49,31 @@
             <div class="container">
                 <span class="navbar-brand app-brand">{{ title }}</span>
                 <div class="ms-auto d-flex align-items-center gap-3">
-                    <button type="button"
-                            class="btn btn-link nav-link theme-toggle p-1"
-                            data-theme-toggle
-                            aria-label="Toggle dark mode">
+                    <button
+                        type="button"
+                        class="btn btn-link nav-link theme-toggle p-1"
+                        data-theme-toggle
+                        aria-label="Toggle dark mode"
+                    >
                         <i class="bi bi-moon-stars theme-icon" aria-hidden="true"></i>
                     </button>
                     {% if editing_enabled %}
-                        <a href="{{ url_for("dashboard.view_config") }}"
-                           class="btn btn-link nav-link config-link p-1"
-                           aria-label="Edit configuration"
-                           title="Edit configuration">
+                        <a
+                            href="{{ url_for("dashboard.view_config") }}"
+                            class="btn btn-link nav-link config-link p-1"
+                            aria-label="Edit configuration"
+                            title="Edit configuration"
+                        >
                             <i class="bi bi-terminal" aria-hidden="true"></i>
                         </a>
                     {% endif %}
-                    <a href="https://github.com/noahhefner/homelab-dashboard"
-                       class="btn btn-link nav-link github-link p-1"
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       aria-label="View source on GitHub">
+                    <a
+                        href="https://github.com/noahhefner/homelab-dashboard"
+                        class="btn btn-link nav-link github-link p-1"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="View source on GitHub"
+                    >
                         <i class="bi bi-github" aria-hidden="true"></i>
                     </a>
                 </div>
@@ -56,57 +84,27 @@
                 <div class="row g-4">
                     <!-- Tiles: main area, full width on mobile, left ~75% on desktop (lg+) -->
                     <section aria-label="Tiles" class="col-12 col-lg-9">
-                        <div class="row g-3">
-                            {% for tile in tiles %}
-                                <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                                    <a class="app-tile tile"
-                                       href="{{ tile.url }}"
-                                       target="_blank"
-                                       rel="noopener noreferrer">
-                                        <div class="tile-icon">
-                                            {% if tile.icon and tile.icon is url %}
-                                                <img src="{{ tile.icon }}"
-                                                     alt="{{ tile.name }}"
-                                                     loading="lazy"
-                                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                                                <span class="tile-monogram monogram-fallback">{{ tile.name[:1]|upper }}</span>
-                                            {% else %}
-                                                <span class="tile-monogram">{{ tile.name[:1]|upper }}</span>
-                                            {% endif %}
-                                        </div>
-                                        <span class="tile-name">{{ tile.name }}</span>
-                                    </a>
-                                </div>
-                            {% endfor %}
-                        </div>
                         {% for group in tile_groups %}
                             <div class="tile-group">
-                                <h3 class="group-title">
-                                    {% if group.icon and group.icon is url %}
-                                        <img src="{{ group.icon }}"
-                                             alt="{{ group.name }}"
-                                             class="tile-icon"
-                                             loading="lazy"
-                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" />
-                                        <span class="tile-monogram monogram-fallback">{{ group.name[:1]|upper }}</span>
-                                        <span class="tile-name">{{ group.name }}</span>
-                                    {% else %}
-                                        <span class="tile-name">{{ group.name }}</span>
-                                    {% endif %}
-                                </h3>
+                                <h3 class="group-title">{{ group.name }}</h3>
                                 <div class="row g-3">
                                     {% for tile in group.tiles %}
                                         <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                                            <a class="app-tile tile"
-                                               href="{{ tile.url }}"
-                                               target="_blank"
-                                               rel="noopener noreferrer">
+                                            <a
+                                                class="app-tile tile"
+                                                href="{{ tile.url }}"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                title="{{ tile.name }}"
+                                            >
                                                 <div class="tile-icon">
                                                     {% if tile.icon and tile.icon is url %}
-                                                        <img src="{{ tile.icon }}"
-                                                             alt="{{ tile.name }}"
-                                                             loading="lazy"
-                                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                                        <img
+                                                            src="{{ tile.icon }}"
+                                                            alt="{{ tile.name }}"
+                                                            loading="lazy"
+                                                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                                        />
                                                         <span class="tile-monogram monogram-fallback">{{ tile.name[:1]|upper }}</span>
                                                     {% else %}
                                                         <span class="tile-monogram">{{ tile.name[:1]|upper }}</span>
@@ -128,34 +126,43 @@
                                 {% for group in bookmark_groups %}
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="bookmark-heading-{{ loop.index }}">
-                                            <button type="button"
-                                                    class="accordion-button {{ 'collapsed' if group.collapsed }}"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#bookmark-collapse-{{ loop.index }}"
-                                                    aria-expanded="{{ 'false' if group.collapsed else 'true' }}"
-                                                    aria-controls="bookmark-collapse-{{ loop.index }}">{{ group.name }}</button>
+                                            <button
+                                                type="button"
+                                                class="accordion-button {{ 'collapsed' if group.collapsed }}"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#bookmark-collapse-{{ loop.index }}"
+                                                aria-expanded="{{ 'false' if group.collapsed else 'true' }}"
+                                                aria-controls="bookmark-collapse-{{ loop.index }}"
+                                            >{{ group.name }}</button>
                                         </h2>
-                                        <div id="bookmark-collapse-{{ loop.index }}"
-                                             class="accordion-collapse collapse {{ 'show' if not group.collapsed }}">
+                                        <div
+                                            id="bookmark-collapse-{{ loop.index }}"
+                                            class="accordion-collapse collapse {{ 'show' if not group.collapsed }}"
+                                        >
                                             <div class="accordion-body">
                                                 <ul class="bookmark-list">
                                                     {% for bookmark in group.bookmarks %}
                                                         <li>
-                                                            <a href="{{ bookmark.url }}"
-                                                               class="bookmark-link"
-                                                               target="_blank"
-                                                               rel="noopener noreferrer">
+                                                            <a
+                                                                href="{{ bookmark.url }}"
+                                                                class="bookmark-link"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                title="{{ bookmark.label }}"
+                                                            >
                                                                 {% if bookmark.icon and bookmark.icon is url %}
-                                                                    <img src="{{ bookmark.icon }}"
-                                                                         alt="{{ bookmark.label }}"
-                                                                         class="bookmark-icon"
-                                                                         loading="lazy"
-                                                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                                                    <img
+                                                                        src="{{ bookmark.icon }}"
+                                                                        alt="{{ bookmark.label }}"
+                                                                        class="bookmark-icon"
+                                                                        loading="lazy"
+                                                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                                                                    />
                                                                     <span class="bookmark-monogram monogram-fallback">{{ bookmark.label[:1]|upper }}</span>
                                                                 {% else %}
                                                                     <span class="bookmark-monogram">{{ bookmark.label[:1]|upper }}</span>
                                                                 {% endif %}
-                                                                <span class="bookmark-label">{{ bookmark.label }}</span>
+                                                                <span class="bookmark-label text-truncate">{{ bookmark.label }}</span>
                                                             </a>
                                                         </li>
                                                     {% endfor %}
@@ -172,7 +179,9 @@
                 </div>
             </div>
         </main>
-        <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script
+            src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"
+        ></script>
         <script src="{{ url_for('static', filename='app.js') }}"></script>
     </body>
 </html>

@@ -94,13 +94,6 @@ def parse_dashboard(data):
     if not title:
         title = "Homelab"
 
-    tiles = []
-    raw_tiles = data.get("tiles") or []
-    if not isinstance(raw_tiles, list):
-        raise ConfigValidationError("tiles must be a list")
-    for index, tdata in enumerate(raw_tiles):
-        tiles.append(_parse_tile(tdata, index))
-
     tile_groups = []
     raw_tile_groups = data.get("tile_groups") or []
     if not isinstance(raw_tile_groups, list):
@@ -115,6 +108,4 @@ def parse_dashboard(data):
     for index, gdata in enumerate(raw_groups):
         groups.append(_parse_group(gdata, index))
 
-    return DashboardConfig(
-        title=title, tiles=tiles, tile_groups=tile_groups, bookmark_groups=groups
-    )
+    return DashboardConfig(title=title, tile_groups=tile_groups, bookmark_groups=groups)

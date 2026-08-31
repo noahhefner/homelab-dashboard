@@ -6,28 +6,30 @@ editor: true
 # Tiles are general-purpose links. Each points to either an internal homelab
 # service or an external service (e.g., an email provider's webmail, a cloud
 # account portal, a SaaS admin console). Any valid http(s) URL opens in a new tab.
-tiles:
-  - name: Plex
-    url: "https://plex.lan:3240"
-    icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg"
-  - name: Nextcloud
-    url: "https://cloud.lan"
-    icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextcloud.svg"
-  - name: Proxmox
-    url: "https://proxmox.lan:8006"
-    icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/proxmox.svg"
-  - name: Grafana
-    url: "https://grafana.lan"
-    icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/grafana.svg"
-  - name: Pi-hole
-    url: "https://pihole.lan/admin"
-    icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/pihole.svg"
-  - name: Unifi Controller
-    url: "https://unifi.lan:8443"
 
 # Tiles can also be organized into named groups. Tile groups are always visible
 # (no collapse/expand), unlike bookmark groups below.
 tile_groups:
+  - name: Home Server
+    tiles:
+      - name: Plex
+        url: "https://plex.lan:3240"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg"
+      - name: Nextcloud
+        url: "https://cloud.lan"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextcloud.svg"
+      - name: Proxmox
+        url: "https://proxmox.lan:8006"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/proxmox.svg"
+      - name: Grafana
+        url: "https://grafana.lan"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/grafana.svg"
+      - name: Pi-hole
+        url: "https://pihole.lan/admin"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/pihole.svg"
+      - name: Unifi Controller
+        url: "https://unifi.lan:8443"
+
   - name: Cloud & Webmail
     icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/protonmail.svg"
     tiles:
@@ -38,7 +40,7 @@ tile_groups:
 
 bookmark_groups:
   - name: Media
-    collapsed: true
+    collapsed: false
     bookmarks:
       - label: YouTube
         url: "https://www.youtube.com"

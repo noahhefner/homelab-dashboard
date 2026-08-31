@@ -33,6 +33,5 @@ class TileGroup:
 @dataclass
 class DashboardConfig:
     title: str = "Homelab"
-    tiles: list[Tile] = field(default_factory=list)
     tile_groups: list[TileGroup] = field(default_factory=list)
     bookmark_groups: list[BookmarkGroup] = field(default_factory=list)

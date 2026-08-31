@@ -169,7 +169,6 @@ def home():
     return render_template(
         "index.html",
         title=config.title,
-        tiles=config.tiles,
         tile_groups=config.tile_groups,
         bookmark_groups=config.bookmark_groups,
         editing_enabled=loader.editor_enabled(),
