@@ -8,7 +8,5 @@ services:
     environment:
       - CONFIG_PATH=/app/config/example.yaml
     volumes:
-      # Mount your live-editable config over the bundled example.
-      # Edit this file on the host and refresh to see changes - no restart needed.
       - ./config:/app/config
     restart: unless-stopped

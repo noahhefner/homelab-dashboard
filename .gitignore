@@ -26,3 +26,7 @@ Thumbs.db
 *.swp
 .vscode/
 .idea/
+
+# Config files
+local.yaml
+example.yaml.backup.yaml

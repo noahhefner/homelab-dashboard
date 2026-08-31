@@ -10,3 +10,4 @@ __pycache__/
 *.md
 specs/
 README.md
+local.yaml

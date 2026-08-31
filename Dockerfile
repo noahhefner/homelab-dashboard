@@ -1,48 +1,67 @@
-# Stage 1: provision Bootstrap assets (Node + pnpm). Keeps the runtime image
-# free of Node by producing only the compiled assets consumed by Stage 2.
-FROM node:22-slim AS bootstrap-assets
+# ------------------------------------------------------------------------------
+# Stage 1: Fetch frontend assets
+# ------------------------------------------------------------------------------
+
+FROM node:lts-slim AS frontend-assets
 
 WORKDIR /build
 
-# Enable pnpm via corepack (pinned / reproducible).
 RUN corepack enable
 
-# Install dependencies from the committed lockfile (deterministic).
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
-# Copy the provisioning script and materialize the served assets.
 COPY scripts/provision-bootstrap.sh scripts/provision-bootstrap.sh
 RUN pnpm provision
 
-FROM python:3.14-slim
+# ------------------------------------------------------------------------------
+# Stage 2: Fetch Python packages
+# ------------------------------------------------------------------------------
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    UV_COMPILE_BYTECODE=1 \
-    UV_LINK_MODE=copy \
-    UV_PROJECT_ENVIRONMENT=/usr/local \
-    CONFIG_PATH=/app/config/example.yaml
+FROM python:3.14-slim AS python-venv
 
 WORKDIR /app
 
-# Install uv (single binary, no pip).
-COPY --from=ghcr.io/astral-sh/uv:0.12 /uv /uvx /usr/local/bin/
+ENV UV_COMPILE_BYTECODE=1 \
+    UV_NO_INSTALL_PROJECT=1 \
+    UV_LINK_MODE=copy
 
-# Install dependencies without reinstalling the (non-package) project.
+# Install uv
+COPY --from=docker.io/astral/uv:latest /uv /uvx /bin/
+
+# Create virtual environment
+RUN uv venv
+
+# Install dependencies
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev --no-install-project
+RUN uv sync --frozen --no-dev
+
+# ------------------------------------------------------------------------------
+# Stage 3: Runner
+# ------------------------------------------------------------------------------
+
+FROM python:3.14-slim AS runner
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1\
+    CONFIG_PATH=/app/config/example.yaml
 
 # Copy the provisioned Bootstrap assets from the Node stage.
-COPY --from=bootstrap-assets /build/app/static/bootstrap ./app/static/bootstrap
-COPY --from=bootstrap-assets /build/app/static/bootstrap-icons ./app/static/bootstrap-icons
+COPY --from=frontend-assets /build/app/static/bootstrap ./app/static/bootstrap
+COPY --from=frontend-assets /build/app/static/bootstrap-icons ./app/static/bootstrap-icons
+
+# Copy virtual environment and add to PATH
+COPY --from=python-venv /app/.venv ./.venv
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy the application.
 COPY app ./app
 
-# Ship a starter config; users typically mount their own over this.
-COPY config ./config
+# Ship an example config
+COPY config/example.yaml ./config/
 
 EXPOSE 5000
 
-CMD ["python", "-m", "app.server"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--timeout", "30", "app.server:app"]

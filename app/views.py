@@ -1,10 +1,41 @@
 import os
 
-from flask import Blueprint, current_app, jsonify, render_template, request
+from flask import (
+    Blueprint,
+    current_app,
+    jsonify,
+    render_template,
+    request,
+    send_from_directory,
+)
 
 from app.editor import ConfigEditorError, read_backup, read_raw, write_atomic
 
 bp = Blueprint("dashboard", __name__)
+
+FAVICON_DIR = "static/favicon_io"
+
+
+@bp.get("/favicon.ico")
+def favicon_ico():
+    return send_from_directory(FAVICON_DIR, "favicon.ico", mimetype="image/x-icon")
+
+
+@bp.get("/favicon-32x32.png")
+def favicon_32():
+    return send_from_directory(FAVICON_DIR, "favicon-32x32.png", mimetype="image/png")
+
+
+@bp.get("/favicon-16x16.png")
+def favicon_16():
+    return send_from_directory(FAVICON_DIR, "favicon-16x16.png", mimetype="image/png")
+
+
+@bp.get("/apple-touch-icon.png")
+def apple_touch_icon():
+    return send_from_directory(
+        FAVICON_DIR, "apple-touch-icon.png", mimetype="image/png"
+    )
 
 
 @bp.get("/health")
