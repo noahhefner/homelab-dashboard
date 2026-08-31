@@ -1,15 +1,15 @@
 # Homelab Dashboard
 
-A self-hosted, single-page dashboard homepage for your home server. It renders your services and grouped bookmarks from one YAML file, served by a small Flask app inside a single Docker container.
+A self-hosted, single-page dashboard homepage for your home server. It renders your tiles and grouped bookmarks from one YAML file, served by a small Flask app inside a single Docker container.
 
 <img width="1344" height="746" alt="image" src="https://github.com/user-attachments/assets/0322bad7-be54-44b8-9a9c-8213819455f6" />
 
 ## Features
 
-- **Services**: Clickable tiles that open in a new tab (icon image or monogram fallback).
-- **Bookmark groups**: Named groups with collapsible/expandable bookmarks.
+- **Tiles**: Clickable links that open in a new tab. A tile can point to an internal homelab service or an external service (e.g., webmail, a cloud account portal). Tiles are organized with tile groups.
+- **Bookmarks**: Links to other frequently used sites in a compact sidebar. Bookmarks are organized with bookmark groups.
 - **Live reload**: Edit the YAML file and refresh the browser — no restart needed.
-- **Mobile responsive**: reflows to no-horizontal-scroll layout on phones; tap-friendly.
+- **Mobile Friendly**: Reflows to no-horizontal-scroll layout on phones; tap-friendly.
 - **Dark mode**: Switchable light/dark themes via a toggle.
 - **One config file**: Everything is defined in a single YAML document. You can even edit the YAML file directly from your browser with the built-in editor.
 
@@ -28,12 +28,13 @@ Everything is configured in a YAML file. See [`config/example.yaml`](config/exam
 title: "Home Lab"  # Title of the page
 editor: true       # Enable / disable in-browser yaml editor
 
-# Put links to your homelab services here.
-services:
-  - name: Plex
-    url: "https://plex.lan:32400"
-    # Optional: Display an icon for the service.
-    icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg"  
+# Tiles can also be organized into named groups. Tile groups are always
+# visible (no collapse/expand), unlike bookmark groups.
+tile_groups:
+  - name: Cloud & Webmail
+    tiles:
+      - name: Webmail
+        url: "https://mail.example.com"
 
 # Place your bookmarks here, organized with groups.
 bookmark_groups:
@@ -130,5 +131,6 @@ uv run ty check
 **HTML Templates**
 
 ```sh
+uv run djlint . --lint
 uv run djlint . --reformat --single-attribute-per-line
 ```

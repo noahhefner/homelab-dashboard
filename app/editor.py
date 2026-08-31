@@ -18,7 +18,9 @@ def read_raw(config_path):
         with open(config_path, "r", encoding="utf-8") as f:
             return f.read()
     except OSError as exc:
-        raise ConfigEditorError(f"Could not read the config file '{config_path}': {exc}")
+        raise ConfigEditorError(
+            f"Could not read the config file '{config_path}': {exc}"
+        )
 
 
 def read_backup(config_path):

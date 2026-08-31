@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 
 
 @dataclass
-class Service:
+class Tile:
     name: str
     url: str
     icon: str | None = None
@@ -24,7 +24,14 @@ class BookmarkGroup:
 
 
 @dataclass
+class TileGroup:
+    name: str
+    tiles: list[Tile] = field(default_factory=list)
+    icon: str | None = None
+
+
+@dataclass
 class DashboardConfig:
     title: str = "Homelab"
-    services: list[Service] = field(default_factory=list)
+    tile_groups: list[TileGroup] = field(default_factory=list)
     bookmark_groups: list[BookmarkGroup] = field(default_factory=list)

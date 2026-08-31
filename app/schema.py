@@ -1,4 +1,4 @@
-from app.model import Bookmark, BookmarkGroup, DashboardConfig, Service
+from app.model import Bookmark, BookmarkGroup, DashboardConfig, Tile, TileGroup
 from app.security import validate_url
 
 
@@ -19,16 +19,16 @@ def _parse_url(value, field, where):
     return value
 
 
-def _parse_service(data, index):
+def _parse_tile(data, index):
     if not isinstance(data, dict):
-        raise ConfigValidationError(f"services[{index}] must be a mapping")
-    where = f"services[{index}]"
+        raise ConfigValidationError(f"tiles[{index}] must be a mapping")
+    where = f"tiles[{index}]"
     name = _require_non_empty(data.get("name"), "name", where)
     url = _parse_url(data.get("url"), "url", where)
     icon = data.get("icon")
     if icon is not None:
         icon = str(icon)
-    return Service(name=name, url=url, icon=icon)
+    return Tile(name=name, url=url, icon=icon)
 
 
 def _parse_bookmark(data, index):
@@ -65,6 +65,23 @@ def _parse_group(data, index):
     )
 
 
+def _parse_tile_group(data, index):
+    if not isinstance(data, dict):
+        raise ConfigValidationError(f"tile_groups[{index}] must be a mapping")
+    where = f"tile_groups[{index}]"
+    name = _require_non_empty(data.get("name"), "name", where)
+    icon = data.get("icon")
+    if icon is not None:
+        icon = str(icon)
+    tiles = []
+    raw_tiles = data.get("tiles") or []
+    if not isinstance(raw_tiles, list):
+        raise ConfigValidationError(f"{where}.tiles must be a list")
+    for tindex, tdata in enumerate(raw_tiles):
+        tiles.append(_parse_tile(tdata, tindex))
+    return TileGroup(name=name, tiles=tiles, icon=icon)
+
+
 def parse_dashboard(data):
     """Convert a raw parsed-YAML mapping into a validated DashboardConfig."""
     if data is None:
@@ -77,12 +94,12 @@ def parse_dashboard(data):
     if not title:
         title = "Homelab"
 
-    services = []
-    raw_services = data.get("services") or []
-    if not isinstance(raw_services, list):
-        raise ConfigValidationError("services must be a list")
-    for index, sdata in enumerate(raw_services):
-        services.append(_parse_service(sdata, index))
+    tile_groups = []
+    raw_tile_groups = data.get("tile_groups") or []
+    if not isinstance(raw_tile_groups, list):
+        raise ConfigValidationError("tile_groups must be a list")
+    for index, gdata in enumerate(raw_tile_groups):
+        tile_groups.append(_parse_tile_group(gdata, index))
 
     groups = []
     raw_groups = data.get("bookmark_groups") or []
@@ -91,4 +108,4 @@ def parse_dashboard(data):
     for index, gdata in enumerate(raw_groups):
         groups.append(_parse_group(gdata, index))
 
-    return DashboardConfig(title=title, services=services, bookmark_groups=groups)
+    return DashboardConfig(title=title, tile_groups=tile_groups, bookmark_groups=groups)

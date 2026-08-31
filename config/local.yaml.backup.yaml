@@ -1,0 +1,119 @@
+title: "Noah's Homelab"
+editor: true
+
+# Homelab services
+tile_groups:
+  - name: Home Server
+    tiles:
+      - name: Jellyfin
+        url: "https://jellyfin.noahhefner.info"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jellyfin.svg"
+      - name: Fusion
+        url: "https://fusion.noahhefner.info"
+        icon: "https://cdn.jsdelivr.net/gh/selfhst/icons/png/fusion-rss.png"
+      - name: Immich
+        url: "https://immich.noahhefner.info"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/immich.svg"
+      - name: Navidrome
+        url: "https://navidrome.noahhefner.info"
+        icon: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/navidrome.svg"
+      - name: Linkding
+        url: "https://linkding.noahhefner.info"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/linkding.svg"
+      - name: Flatnotes
+        url: "https://flatnotes.noahhefner.info"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/flatnotes.svg"
+      - name: Kopia
+        url: "https://kopia.noahhefner.info"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/kopia.svg"
+      - name: MakeMKV
+        url: "https://makemkv.noahhefner.info"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/makemkv.png"
+      - name: Handbrake
+        url: "https://handbrake.noahhefner.info"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/handbrake.svg"
+      - name: JetKVM
+        url: "https://jetkvm.noahhefner.info"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/jetkvm.svg"
+      - name: "Woodpecker CI"
+        url: "https://woodpecker.noahhefner.info"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/woodpecker-ci.svg"
+
+# Bookmarks
+bookmark_groups:
+
+  - name: Social
+    collapsed: false
+    bookmarks:
+      - label: YouTube
+        url: "https://www.youtube.com"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/youtube.svg"
+      - label: Instagram
+        url: "https://www.instagram.com"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/instagram.svg"
+      - label: LinkedIn
+        url: "https://www.linkedin.com"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/linkedin.svg"
+
+  - name: Finances
+    collapsed: false
+    bookmarks:
+      - label: Ally
+        url: "https://www.ally.com"
+        icon: "https://static.cdnlogo.com/logos/a/48/ally-bank.svg"
+      - label: Capital One
+        url: "https://www.capitalone.com"
+        icon: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/capital-one.svg"
+      - label: Fidelity Net Benefits
+        url: "https://nb.fidelity.com"
+        icon: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/fidelity.svg"
+      - label: Citi
+        url: "https://www.citi.com"
+        icon: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/citibank.svg"
+      - label: National Benefits Services
+        url: "https://www.nbsbenefits.com"
+        icon: "https://www.nbsbenefits.com/wp-content/themes/nbs/images/logo.jpg"
+
+  - name: Bills
+    collapsed: true
+    bookmarks:
+      - label: Bilt
+        url: "https://www.bilt.com"
+        icon: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/biltema.svg"
+      - label: Progressive
+        url: "https://www.progressive.com"
+        icon: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/progressive.svg"
+
+  - name: Shopping
+    collapsed: true
+    bookmarks:
+      - label: Amazon
+        url: "https://www.amazon.com"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/amazon-light.svg"
+      - label: eBay
+        url: "https://www.ebay.com"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/ebay.svg"
+      - label: Newegg
+        url: "https://www.newegg.com"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/newegg.svg"
+
+  - name: Networking
+    collapsed: true
+    bookmarks:
+      - label: OPNsense Router
+        url: "http://10.38.38.1"
+        icon: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/opnsense.svg"
+      - label: AT&T Modem
+        url: "http://192.168.1.254"
+        icon: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/at-t.svg"
+      - label: Pi-hole
+        url: "http://10.38.38.95"
+      - label: TP-Link Router
+        url: "http://10.38.38.103"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/tp-link.svg"
+
+  - name: Misc
+    collapsed: true
+    bookmarks:
+      - label: LTT Labs
+        url: "https://www.lttlabs.com"

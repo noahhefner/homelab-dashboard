@@ -25,12 +25,12 @@ def _setup(path, data):
     return create_app(config_path=str(path))
 
 
-def _editor_config(extra_services=None, title="Homelab"):
+def _editor_config(extra_tiles=None, title="Homelab"):
     cfg = {"editor": True, "title": title}
-    if extra_services:
-        cfg["services"] = extra_services
+    if extra_tiles:
+        cfg["tiles"] = extra_tiles
     else:
-        cfg["services"] = []
+        cfg["tiles"] = []
     return cfg
 
 
@@ -46,7 +46,7 @@ def test_save_reflected_on_next_request(tmp_path):
 
     resp = client.post(
         "/config/save",
-        json={"content": "editor: true\ntitle: After\nservices: []\n"},
+        json={"content": "editor: true\ntitle: After\ntiles: []\n"},
     )
     assert resp.status_code == 200
 
@@ -67,8 +67,8 @@ def test_save_round_trips_exact_bytes(tmp_path):
         "title: Homelab\n"
         "\n"
         "# comment preserved \n"
-        "services:\n"
-        "  - name: \"Plex\"\n"
+        "tiles:\n"
+        '  - name: "Plex"\n'
         "    url: https://plex.lan\n"
     )
     resp = client.post("/config/save", json={"content": content})
@@ -92,7 +92,7 @@ def test_malformed_save_leaves_prior_config_intact(tmp_path):
     client = app.test_client()
     original = cfg.read_text(encoding="utf-8")
 
-    resp = client.post("/config/save", json={"content": "services:\n  - name: [oops"})
+    resp = client.post("/config/save", json={"content": "tiles:\n  - name: [oops"})
     assert resp.status_code == 400
     assert cfg.read_text(encoding="utf-8") == original
 
@@ -110,7 +110,7 @@ def test_format_violation_save_changes_nothing(tmp_path):
 
     resp = client.post(
         "/config/save",
-        json={"content": "editor: true\ntitle: New\nservices: \"not-a-list\"\n"},
+        json={"content": 'editor: true\ntitle: New\ntiles: "not-a-list"\n'},
     )
     assert resp.status_code == 400
     assert cfg.read_text(encoding="utf-8") == original
@@ -130,7 +130,7 @@ def test_write_failure_returns_500_and_preserves_file(tmp_path):
     try:
         resp = client.post(
             "/config/save",
-            json={"content": "editor: true\ntitle: New\nservices: []\n"},
+            json={"content": "editor: true\ntitle: New\ntiles: []\n"},
         )
         assert resp.status_code == 500
         assert cfg.read_text(encoding="utf-8") == original
@@ -148,7 +148,7 @@ def test_get_config_renders_current_yaml(tmp_path):
 
     html = client.get("/config").get_data(as_text=True)
     assert "config-editor" in html  # editing enabled -> textarea present
-    assert "services: []" in html
+    assert "tiles: []" in html
 
 
 def test_config_error_page_when_file_missing(tmp_path):
@@ -173,7 +173,7 @@ def test_homepage_links_to_config_when_editing_enabled(tmp_path):
 
 def test_homepage_has_no_config_link_when_disabled(tmp_path):
     cfg = tmp_path / "config.yaml"
-    app = _setup(cfg, {"services": []})
+    app = _setup(cfg, {"tiles": []})
     client = app.test_client()
 
     html = client.get("/").get_data(as_text=True)
@@ -196,7 +196,10 @@ def test_save_with_stale_mtime_rejected(tmp_path):
 
     resp = client.post(
         "/config/save",
-        json={"content": "editor: true\ntitle: Overwrite\nservices: []\n", "config_mtime": mtime},
+        json={
+            "content": "editor: true\ntitle: Overwrite\ntiles: []\n",
+            "config_mtime": mtime,
+        },
     )
     assert resp.status_code == 409
     assert "changed on disk" in resp.get_json()["error"]
@@ -211,7 +214,7 @@ def test_save_accepts_current_mtime_as_string_like_browser(tmp_path):
     resp = client.post(
         "/config/save",
         json={
-            "content": "editor: true\ntitle: Fine\nservices: []\n",
+            "content": "editor: true\ntitle: Fine\ntiles: []\n",
             "config_mtime": str(mtime),
         },
     )
@@ -225,7 +228,7 @@ def test_recover_restores_last_known_good(tmp_path):
 
     client.post(
         "/config/save",
-        json={"content": "editor: true\ntitle: Bad\nservices: []\n"},
+        json={"content": "editor: true\ntitle: Bad\ntiles: []\n"},
     )
 
     resp = client.post("/config/restore")
@@ -237,3 +240,44 @@ def test_recover_restores_last_known_good(tmp_path):
     time.sleep(0.01)
     html = client.get("/").get_data(as_text=True)
     assert "Good" in html
+
+
+def test_save_with_valid_tile_groups_renders_on_reload(tmp_path):
+    cfg = tmp_path / "config.yaml"
+    app = _setup(cfg, _editor_config())
+    client = app.test_client()
+
+    content = (
+        "editor: true\n"
+        "title: Grouped\n"
+        "tile_groups:\n"
+        "  - name: Media\n"
+        "    tiles:\n"
+        "      - name: Plex\n"
+        "        url: https://plex.lan\n"
+    )
+    resp = client.post("/config/save", json={"content": content})
+    assert resp.status_code == 200
+
+    _bump_mtime(cfg)
+    time.sleep(0.01)
+    html = client.get("/").get_data(as_text=True)
+    assert "Grouped" in html
+    assert "Media" in html
+    assert "Plex" in html
+
+
+def test_save_with_malformed_tile_groups_is_rejected(tmp_path):
+    cfg = tmp_path / "config.yaml"
+    app = _setup(cfg, _editor_config(title="Good"))
+    client = app.test_client()
+    original = cfg.read_text(encoding="utf-8")
+
+    resp = client.post(
+        "/config/save",
+        json={
+            "content": "editor: true\ntile_groups:\n  - tiles:\n      - name: Plex\n        url: https://plex.lan\n"
+        },
+    )
+    assert resp.status_code == 400
+    assert cfg.read_text(encoding="utf-8") == original

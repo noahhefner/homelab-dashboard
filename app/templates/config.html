@@ -3,23 +3,45 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description"
-              content="View and edit the dashboard YAML configuration." />
+        <meta
+            name="description"
+            content="View and edit the dashboard YAML configuration."
+        />
         <title>Configuration</title>
-        <link rel="icon" type="image/x-icon"
-              href="{{ url_for('static', filename='favicon_io/favicon.ico') }}" />
-        <link rel="icon" type="image/png" sizes="32x32"
-              href="{{ url_for('static', filename='favicon_io/favicon-32x32.png') }}" />
-        <link rel="icon" type="image/png" sizes="16x16"
-              href="{{ url_for('static', filename='favicon_io/favicon-16x16.png') }}" />
-        <link rel="apple-touch-icon" sizes="180x180"
-              href="{{ url_for('static', filename='favicon_io/apple-touch-icon.png') }}" />
-        <link rel="manifest"
-              href="{{ url_for('static', filename='favicon_io/site.webmanifest') }}" />
-        <link rel="stylesheet"
-              href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" />
-        <link rel="stylesheet"
-              href="{{ url_for('static', filename='bootstrap-icons/bootstrap-icons.min.css') }}" />
+        <link
+            rel="icon"
+            type="image/x-icon"
+            href="{{ url_for('static', filename='favicon_io/favicon.ico') }}"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="{{ url_for('static', filename='favicon_io/favicon-32x32.png') }}"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="{{ url_for('static', filename='favicon_io/favicon-16x16.png') }}"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="{{ url_for('static', filename='favicon_io/apple-touch-icon.png') }}"
+        />
+        <link
+            rel="manifest"
+            href="{{ url_for('static', filename='favicon_io/site.webmanifest') }}"
+        />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"
+        />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='bootstrap-icons/bootstrap-icons.min.css') }}"
+        />
         <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
     </head>
     <body>
@@ -27,13 +49,17 @@
             <div class="container">
                 <a class="navbar-brand app-brand" href="{{ url_for("dashboard.home") }}">Homelab</a>
                 <div class="ms-auto d-flex align-items-center gap-3">
-                    <a href="{{ url_for("dashboard.home") }}"
-                       class="btn btn-link nav-link p-1"
-                       aria-label="Back to the dashboard"><i class="bi bi-house" aria-hidden="true"></i></a>
-                    <button type="button"
-                            class="btn btn-link nav-link theme-toggle p-1"
-                            data-theme-toggle
-                            aria-label="Toggle dark mode">
+                    <a
+                        href="{{ url_for("dashboard.home") }}"
+                        class="btn btn-link nav-link p-1"
+                        aria-label="Back to the dashboard"
+                    ><i class="bi bi-house" aria-hidden="true"></i></a>
+                    <button
+                        type="button"
+                        class="btn btn-link nav-link theme-toggle p-1"
+                        data-theme-toggle
+                        aria-label="Toggle dark mode"
+                    >
                         <i class="bi bi-moon-stars theme-icon" aria-hidden="true"></i>
                     </button>
                 </div>
@@ -56,11 +82,13 @@
                         <form id="config-form">
                             <input type="hidden" id="config-mtime" value="{{ config_mtime }}" />
                             <div class="mb-3">
-                                <textarea id="config-editor"
-                                          name="content"
-                                          class="form-control config-editor"
-                                          rows="24"
-                                          spellcheck="false">{{ raw_config }}</textarea>
+                                <textarea
+                                    id="config-editor"
+                                    name="content"
+                                    class="form-control config-editor"
+                                    rows="24"
+                                    spellcheck="false"
+                                >{{ raw_config }}</textarea>
                             </div>
                             {% if not writable %}
                                 <div class="alert alert-warning" role="alert">The configuration file is not writable. Saves will fail.</div>
@@ -83,7 +111,9 @@
                 {% endif %}
             </div>
         </main>
-        <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script
+            src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"
+        ></script>
         <script src="{{ url_for('static', filename='app.js') }}"></script>
         {% if editing_enabled and not error %}
             <script>

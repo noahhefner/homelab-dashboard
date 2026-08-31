@@ -17,7 +17,7 @@ def _bump_mtime(path):
 
 def test_loader_returns_cached_config_when_file_unchanged(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"services": []})
+    _write(cfg, {"tiles": []})
     loader = ConfigLoader(str(cfg))
 
     config, error = loader.get()
@@ -30,15 +30,15 @@ def test_loader_returns_cached_config_when_file_unchanged(tmp_path):
 
 def test_loader_reloads_on_file_change(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"services": [{"name": "A", "url": "https://a.lan"}]})
+    _write(cfg, {"tiles": [{"name": "A", "url": "https://a.lan"}]})
     loader = ConfigLoader(str(cfg))
     config, _ = loader.get()
-    assert len(config.services) == 1
+    assert len(config.tiles) == 1
 
     _write(
         cfg,
         {
-            "services": [
+            "tiles": [
                 {"name": "A", "url": "https://a.lan"},
                 {"name": "B", "url": "https://b.lan"},
             ]
@@ -49,18 +49,18 @@ def test_loader_reloads_on_file_change(tmp_path):
 
     reloaded, error = loader.get()
     assert error is None
-    assert len(reloaded.services) == 2
+    assert len(reloaded.tiles) == 2
 
 
 def test_loader_force_reload(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"services": []})
+    _write(cfg, {"tiles": []})
     loader = ConfigLoader(str(cfg))
-    assert len(loader.get()[0].services) == 0
+    assert len(loader.get()[0].tiles) == 0
 
-    _write(cfg, {"services": [{"name": "X", "url": "https://x.lan"}]})
+    _write(cfg, {"tiles": [{"name": "X", "url": "https://x.lan"}]})
     loader.reload()
-    assert len(loader.get()[0].services) == 1
+    assert len(loader.get()[0].tiles) == 1
 
 
 def test_loader_missing_file_reports_error(tmp_path):

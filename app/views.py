@@ -86,7 +86,7 @@ def save_config():
     if expected_mtime is not None:
         try:
             expected_mtime = int(expected_mtime)
-        except (TypeError, ValueError):
+        except TypeError, ValueError:
             expected_mtime = None
     if expected_mtime is not None:
         current_mtime = _config_mtime(loader.path)
@@ -110,7 +110,9 @@ def save_config():
         return _write_error_response(exc)
 
     return (
-        jsonify({"ok": True, "message": "Saved. The dashboard will reflect the change."}),
+        jsonify(
+            {"ok": True, "message": "Saved. The dashboard will reflect the change."}
+        ),
         200,
     )
 
@@ -167,7 +169,7 @@ def home():
     return render_template(
         "index.html",
         title=config.title,
-        services=config.services,
+        tile_groups=config.tile_groups,
         bookmark_groups=config.bookmark_groups,
         editing_enabled=loader.editor_enabled(),
     )
