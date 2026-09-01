@@ -15,9 +15,6 @@ tile_groups:
       - name: Plex
         url: "https://plex.lan:3240"
         icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg"
-      - name: Nextcloud
-        url: "https://cloud.lan"
-        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/nextcloud.svg"
       - name: Proxmox
         url: "https://proxmox.lan:8006"
         icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/proxmox.svg"

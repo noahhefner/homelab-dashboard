@@ -42,6 +42,9 @@ RUN uv sync --frozen --no-dev
 
 FROM python:3.14-slim AS runner
 
+# Create a non-root user
+RUN useradd --create-home dasher
+
 WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -62,6 +65,12 @@ COPY app ./app
 # Ship an example config
 COPY config/example.yaml ./config/
 
+# Give non-root user ownership of the entire /app directory
+RUN chown -R dasher:dasher /app
+
 EXPOSE 5000
+
+# Run as non-root user
+USER dasher
 
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--timeout", "30", "app.server:app"]
