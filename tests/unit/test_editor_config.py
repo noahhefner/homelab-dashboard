@@ -3,6 +3,7 @@ import yaml
 
 from app.editor import (
     ConfigEditorError,
+    download_content,
     read_backup,
     read_raw,
     validate_content,
@@ -128,6 +129,44 @@ def test_read_raw_returns_current_text(tmp_path):
 def test_read_raw_missing_file_raises(tmp_path):
     with pytest.raises(ConfigEditorError):
         read_raw(str(tmp_path / "missing.yaml"))
+
+
+# --- download_content ---
+
+
+def test_download_content_returns_bytes_and_basename(tmp_path):
+    content = "title: Homelab\ntiles: []\n"
+    cfg = tmp_path / "site.yaml"
+    cfg.write_text(content, encoding="utf-8")
+
+    data, filename = download_content(str(cfg))
+
+    assert data == content.encode("utf-8")
+    assert data == cfg.read_bytes()
+    assert filename == "site.yaml"
+
+
+def test_download_content_preserves_exact_bytes(tmp_path):
+    content = (
+        "title: Homelab\n"
+        "\n"
+        "# comment with  trailing  spaces   \n"
+        "tiles:\n"
+        '  - name: "Quoted"\n'
+        "    url: https://plex.lan\n"
+        "\n"
+    )
+    cfg = tmp_path / "config.yaml"
+    cfg.write_text(content, encoding="utf-8")
+
+    data, _ = download_content(str(cfg))
+
+    assert data == content.encode("utf-8")
+
+
+def test_download_content_missing_file_raises(tmp_path):
+    with pytest.raises(ConfigEditorError):
+        download_content(str(tmp_path / "missing.yaml"))
 
 
 # --- writable-failure (read-only) handling ---

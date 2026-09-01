@@ -2,6 +2,7 @@ import os
 
 from flask import (
     Blueprint,
+    Response,
     current_app,
     jsonify,
     render_template,
@@ -9,7 +10,13 @@ from flask import (
     send_from_directory,
 )
 
-from app.editor import ConfigEditorError, read_backup, read_raw, write_atomic
+from app.editor import (
+    ConfigEditorError,
+    download_content,
+    read_backup,
+    read_raw,
+    write_atomic,
+)
 
 bp = Blueprint("dashboard", __name__)
 
@@ -68,6 +75,22 @@ def view_config():
         backup_exists=backup_exists,
         config_mtime=_config_mtime(loader.path),
         error=None,
+    )
+
+
+@bp.get("/config/download")
+def download_config():
+    loader = current_app.extensions["dashboard_loader"]
+    try:
+        content, filename = download_content(loader.path)
+    except ConfigEditorError as exc:
+        # Never return an empty/partial attachment (FR-005).
+        return jsonify({"ok": False, "error": str(exc)}), 500
+
+    return Response(
+        content,
+        mimetype="text/yaml",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
 
 

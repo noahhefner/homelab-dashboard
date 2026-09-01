@@ -78,6 +78,25 @@
                         <strong>Unable to load the configuration:</strong> {{ error }}
                     </div>
                 {% else %}
+                    <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+                        <a
+                            href="{{ url_for("dashboard.download_config") }}"
+                            class="btn btn-outline-primary"
+                        ><i class="bi bi-download" aria-hidden="true"></i> Download config</a>
+                        <span class="text-muted small">Icon sources:</span>
+                        <a
+                            href="https://dashboardicons.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="btn btn-link nav-link p-0"
+                        >dashboardicons.com</a>
+                        <a
+                            href="https://github.com/homarr-labs/dashboard-icons"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="btn btn-link nav-link p-0"
+                        >homarr-labs/dashboard-icons</a>
+                    </div>
                     {% if editing_enabled %}
                         <form id="config-form">
                             <input type="hidden" id="config-mtime" value="{{ config_mtime }}" />

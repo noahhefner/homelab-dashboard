@@ -23,6 +23,19 @@ def read_raw(config_path):
         )
 
 
+def download_content(config_path):
+    """Return (bytes, filename) for downloading the config file as-is.
+
+    The filename is the basename of the resolved config path (e.g.,
+    'config/example.yaml' -> 'example.yaml'); it is never derived from
+    client input. Re-using read_raw and encoding back to UTF-8 round-trips
+    the exact on-disk bytes for a valid config. Raises ConfigEditorError if
+    the file cannot be read.
+    """
+    text = read_raw(config_path)
+    return text.encode("utf-8"), os.path.basename(os.path.abspath(config_path))
+
+
 def read_backup(config_path):
     """Return the last-known-good backup text, or None if no backup exists."""
     backup_path = config_path + BACKUP_SUFFIX
