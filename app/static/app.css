@@ -262,43 +262,6 @@ aside {
   color: inherit;
 }
 
-/* Bookmark accordion refinements */
-.bookmark-accordion .accordion-item {
-  border-color: var(--tile-border);
-  background: var(--tile-bg);
-  border-radius: var(--tile-radius) !important;
-  overflow: hidden;
-}
-
-.bookmark-accordion .accordion-item + .accordion-item {
-  margin-top: 0.375rem;
-}
-
-.bookmark-accordion .accordion-button {
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.625rem 0.75rem;
-  box-shadow: none;
-  color: inherit;
-}
-
-.bookmark-accordion .accordion-button:not(.collapsed) {
-  background-color: transparent;
-  color: var(--monogram-bg);
-}
-
-.bookmark-accordion .accordion-button::after {
-  filter: brightness(0) saturate(100%);
-}
-
-[data-bs-theme="dark"] .bookmark-accordion .accordion-button::after {
-  filter: invert(1) saturate(100%) brightness(0.8);
-}
-
-.bookmark-accordion .accordion-body {
-  padding: 0.25rem 0.75rem 0.5rem;
-}
-
 /* Mobile refinements: comfortable touch targets and tighter padding on small screens */
 @media (max-width: 575.98px) {
   .tile {
@@ -341,7 +304,6 @@ aside {
 /* Theme transition for smooth toggling */
 body,
 .app-navbar,
-.app-tile,
-.bookmark-accordion .accordion-item {
+.app-tile {
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
