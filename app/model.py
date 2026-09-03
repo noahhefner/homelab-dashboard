@@ -35,3 +35,5 @@ class DashboardConfig:
     title: str = "Homelab"
     tile_groups: list[TileGroup] = field(default_factory=list)
     bookmark_groups: list[BookmarkGroup] = field(default_factory=list)
+    search_engine: str | None = None
+    search_engine_icon: str | None = None

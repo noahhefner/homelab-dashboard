@@ -98,3 +98,13 @@ def test_no_fixed_width_sections():
     # Avoid full-width-wrapping columns that could cause horizontal scroll.
     html = _get_home_html()
     assert "npm start" not in html  # sanity: no accidental desktop-only content
+
+
+# --- Header search bar hidden on mobile (feature-011) ------------------------
+
+
+def test_search_bar_hidden_on_mobile_via_responsive_utilities():
+    html = _get_home_html()
+    # The search form (and its icon) are hidden below the md breakpoint and
+    # shown at md+ via Bootstrap responsive display utilities (FR-011/FR-015).
+    assert "d-none d-md" in html

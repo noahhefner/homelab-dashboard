@@ -49,6 +49,24 @@ body {
   transition: color 0.15s ease, background-color 0.15s ease;
 }
 
+/* Search engine indicator icon (feature-011). Sizing/content is Bootstrap-based;
+   this only sizes the leading engine icon and hides the broken-image fallback
+   until the onerror handler reveals it. */
+.search-engine-icon {
+  flex: 0 0 auto;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.search-engine-icon-fallback {
+  display: none;
+}
+
 .theme-toggle:hover,
 .github-link:hover,
 .config-link:hover {

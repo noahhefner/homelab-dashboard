@@ -1,15 +1,9 @@
 <!--
   Sync Impact Report
-  Version change: 0.0.0 (unratified template) -> 1.0.0
-  Modified principles: n/a (initial fill of template placeholders)
+  Version change: 1.0.0 -> 1.1.0
+  Modified principles: n/a
   Added sections:
-    - Developer Experience First
-    - Readability Over Cleverness
-    - Extensibility & Modularity
-    - Testability (Test-First)
-    - YAGNI & Simplicity
-    - Security Requirements
-    - Development Workflow
+    - Framework-First Frontend
   Removed sections: none
   Templates requiring updates:
     - .specify/templates/plan-template.md        (used as referenced; no change needed)
@@ -98,6 +92,27 @@ Rationale: Every extra piece of complexity is future maintenance and future conf
 Simplicity keeps the dashboard approachable for new contributors and keeps the
 developer experience (Principle I) fast.
 
+### VI. Framework-First Frontend
+All frontend code MUST leverage the project's chosen framework (Bootstrap) for
+styling, layout, and interactive behavior whenever it provides a suitable class,
+component, or utility. Custom CSS and JavaScript MUST only be written when the
+framework demonstrably lacks the needed capability, and that custom code SHOULD be
+minimal and confined to the narrowest possible scope.
+
+- Bootstrap utility classes (spacing, display, flex, text, borders, etc.) MUST be
+  preferred over hand-written CSS for the same effect.
+- Bootstrap components (cards, modals, navbars, buttons, alerts, etc.) MUST be used
+  as the starting point rather than building equivalent structures from scratch.
+- Custom CSS SHOULD target only what Bootstrap cannot express; overrides and
+  extensions of Bootstrap defaults MUST be documented with a rationale.
+- Custom JavaScript SHOULD be limited to behavior not provided by Bootstrap's JS
+  plugins or the project's existing interaction patterns.
+
+Rationale: Reusing the framework reduces duplicated styling effort, keeps the UI
+consistent, and prevents the accumulation of one-off CSS that becomes difficult to
+maintain. It aligns with Principle V (Simplicity) and Principle III (Modularity) by
+letting a shared, well-tested foundation do the heavy lifting.
+
 ## Security Requirements
 
 This dashboard runs in a homelab and may expose services beyond the local network.
@@ -154,4 +169,4 @@ development MUST comply with the Core Principles above.
   documented justification, and the added complexity MUST be logged in the plan's
   Complexity Tracking table.
 
-**Version**: 1.0.0 | **Ratified**: 2026-08-28 | **Last Amended**: 2026-08-28
+**Version**: 1.1.0 | **Ratified**: 2026-08-28 | **Last Amended**: 2026-09-03

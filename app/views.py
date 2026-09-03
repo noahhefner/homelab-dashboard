@@ -17,6 +17,7 @@ from app.editor import (
     read_raw,
     write_atomic,
 )
+from app.schema import _build_search_action
 
 bp = Blueprint("dashboard", __name__)
 
@@ -53,7 +54,7 @@ def health():
 @bp.route("/config")
 def view_config():
     loader = current_app.extensions["dashboard_loader"]
-    _config, error = loader.get()
+    config, error = loader.get()
 
     if error is not None:
         return render_template("config.html", error=error), 200
@@ -74,6 +75,8 @@ def view_config():
         config_path=loader.path,
         backup_exists=backup_exists,
         config_mtime=_config_mtime(loader.path),
+        search_action=_build_search_action(config.search_engine),
+        search_engine_icon=config.search_engine_icon,
         error=None,
     )
 
@@ -195,4 +198,6 @@ def home():
         tile_groups=config.tile_groups,
         bookmark_groups=config.bookmark_groups,
         editing_enabled=loader.editor_enabled(),
+        search_action=_build_search_action(config.search_engine),
+        search_engine_icon=config.search_engine_icon,
     )

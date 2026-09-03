@@ -1,6 +1,6 @@
 import pytest
 
-from app.schema import ConfigValidationError, parse_dashboard
+from app.schema import DEFAULT_SEARCH_ENGINE, ConfigValidationError, parse_dashboard
 
 
 def test_valid_full_config():
@@ -174,3 +174,38 @@ def test_tile_group_invalid_nested_tile_raises():
         parse_dashboard(
             {"tile_groups": [{"name": "G", "tiles": [{"name": "Bad", "url": "nope"}]}]}
         )
+
+
+# --- Search engine + icon parsing (feature-011) ------------------------------
+
+
+def test_search_engine_default_when_absent():
+    config = parse_dashboard({})
+    assert config.search_engine == DEFAULT_SEARCH_ENGINE
+
+
+def test_search_engine_preserved_when_valid():
+    custom = "https://search.brave.com/search?q={query}"
+    config = parse_dashboard({"search_engine": custom})
+    assert config.search_engine == custom
+
+
+def test_search_engine_default_when_missing_placeholder():
+    config = parse_dashboard({"search_engine": "https://example.com/search"})
+    assert config.search_engine == DEFAULT_SEARCH_ENGINE
+
+
+def test_search_engine_icon_none_when_absent():
+    config = parse_dashboard({})
+    assert config.search_engine_icon is None
+
+
+def test_search_engine_icon_preserved_when_valid_url():
+    icon = "https://example.com/icon.svg"
+    config = parse_dashboard({"search_engine_icon": icon})
+    assert config.search_engine_icon == icon
+
+
+def test_search_engine_icon_none_when_invalid_url():
+    config = parse_dashboard({"search_engine_icon": "javascript:alert(1)"})
+    assert config.search_engine_icon is None

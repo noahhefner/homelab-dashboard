@@ -47,35 +47,79 @@
     <body>
         <nav class="navbar app-navbar navbar-expand" aria-label="Primary">
             <div class="container">
-                <span class="navbar-brand app-brand">{{ title }}</span>
-                <div class="ms-auto d-flex align-items-center gap-3">
-                    <button
-                        type="button"
-                        class="btn btn-link nav-link theme-toggle p-1"
-                        data-theme-toggle
-                        aria-label="Toggle dark mode"
-                    >
-                        <i class="bi bi-moon-stars theme-icon" aria-hidden="true"></i>
-                    </button>
-                    {% if editing_enabled %}
-                        <a
-                            href="{{ url_for("dashboard.view_config") }}"
-                            class="btn btn-link nav-link config-link p-1"
-                            aria-label="Edit configuration"
-                            title="Edit configuration"
-                        >
-                            <i class="bi bi-terminal" aria-hidden="true"></i>
-                        </a>
-                    {% endif %}
-                    <a
-                        href="https://github.com/noahhefner/homelab-dashboard"
-                        class="btn btn-link nav-link github-link p-1"
+                <div class="d-flex align-items-center w-100">
+                    <span class="navbar-brand app-brand me-auto">{{ title }}</span>
+                    <form
+                        class="d-none d-md-block mx-auto"
+                        action="{{ search_action }}"
+                        method="get"
                         target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="View source on GitHub"
+                        rel="noopener"
                     >
-                        <i class="bi bi-github" aria-hidden="true"></i>
-                    </a>
+                        <div class="input-group input-group d-none d-md-flex app-search-group">
+                            {% if search_engine_icon %}
+                                <span class="input-group-text bg-transparent">
+                                    <img
+                                        src="{{ search_engine_icon }}"
+                                        alt="Search engine"
+                                        class="search-engine-icon"
+                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';"
+                                    />
+                                    <span class="search-engine-icon search-engine-icon-fallback">
+                                        <i class="bi bi-search" aria-hidden="true"></i>
+                                    </span>
+                                </span>
+                            {% else %}
+                                <span class="input-group-text search-engine-icon">
+                                    <i class="bi bi-search" aria-hidden="true"></i>
+                                </span>
+                            {% endif %}
+                            <input
+                                type="search"
+                                class="form-control"
+                                name="q"
+                                placeholder="Search…"
+                                aria-label="Search the web"
+                                required
+                            />
+                            <button
+                                type="submit"
+                                class="btn btn-outline-secondary"
+                                aria-label="Submit search"
+                            >
+                                <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="d-flex align-items-center gap-3 ms-auto">
+                        <button
+                            type="button"
+                            class="btn btn-link nav-link theme-toggle p-1"
+                            data-theme-toggle
+                            aria-label="Toggle dark mode"
+                        >
+                            <i class="bi bi-moon-stars theme-icon" aria-hidden="true"></i>
+                        </button>
+                        {% if editing_enabled %}
+                            <a
+                                href="{{ url_for("dashboard.view_config") }}"
+                                class="btn btn-link nav-link config-link p-1"
+                                aria-label="Edit configuration"
+                                title="Edit configuration"
+                            >
+                                <i class="bi bi-terminal" aria-hidden="true"></i>
+                            </a>
+                        {% endif %}
+                        <a
+                            href="https://github.com/noahhefner/homelab-dashboard"
+                            class="btn btn-link nav-link github-link p-1"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="View source on GitHub"
+                        >
+                            <i class="bi bi-github" aria-hidden="true"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </nav>

@@ -3,6 +3,14 @@
 title: "Home Lab"
 editor: true
 
+# Search engine for the navbar search bar. A URL template containing a {query}
+# placeholder; the query terms are substituted before opening in a new tab.
+# Omit it to use the default Google engine.
+search_engine: "https://duckduckgo.com/?q={query}"
+# Optional icon shown next to the search bar indicating the configured engine
+# (external image URL, same format as tile/bookmark icons).
+search_engine_icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/duckduckgo.svg"
+
 # Tiles are general-purpose links. Each points to either an internal homelab
 # service or an external service (e.g., an email provider's webmail, a cloud
 # account portal, a SaaS admin console). Any valid http(s) URL opens in a new tab.

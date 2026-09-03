@@ -28,6 +28,12 @@ Everything is configured in a YAML file. See [`config/example.yaml`](config/exam
 title: "Home Lab"  # Title of the page
 editor: true       # Enable / disable in-browser yaml editor
 
+# Search engine for the navbar search bar. A URL template containing a {query}
+# placeholder; omit it to default to Google.
+search_engine: "https://duckduckgo.com/?q={query}"
+# Optional icon shown next to the search bar (external image URL).
+search_engine_icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/duckduckgo.svg"
+
 # Tiles can also be organized into named groups. Tile groups are always
 # visible (no collapse/expand), unlike bookmark groups.
 tile_groups:

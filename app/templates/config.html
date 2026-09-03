@@ -47,21 +47,68 @@
     <body>
         <nav class="navbar app-navbar navbar-expand" aria-label="Primary">
             <div class="container">
-                <a class="navbar-brand app-brand" href="{{ url_for("dashboard.home") }}">Homelab</a>
-                <div class="ms-auto d-flex align-items-center gap-3">
+                <div class="d-flex align-items-center w-100">
                     <a
+                        class="navbar-brand app-brand me-auto"
                         href="{{ url_for("dashboard.home") }}"
-                        class="btn btn-link nav-link p-1"
-                        aria-label="Back to the dashboard"
-                    ><i class="bi bi-house" aria-hidden="true"></i></a>
-                    <button
-                        type="button"
-                        class="btn btn-link nav-link theme-toggle p-1"
-                        data-theme-toggle
-                        aria-label="Toggle dark mode"
+                    >Homelab</a>
+                    <form
+                        class="d-none d-md-block mx-auto"
+                        action="{{ search_action }}"
+                        method="get"
+                        target="_blank"
+                        rel="noopener"
                     >
-                        <i class="bi bi-moon-stars theme-icon" aria-hidden="true"></i>
-                    </button>
+                        <div class="input-group input-group d-none d-md-flex app-search-group">
+                            {% if search_engine_icon %}
+                                <span class="input-group-text bg-transparent">
+                                    <img
+                                        src="{{ search_engine_icon }}"
+                                        alt="Search engine"
+                                        class="search-engine-icon"
+                                        onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';"
+                                    />
+                                    <span class="search-engine-icon search-engine-icon-fallback">
+                                        <i class="bi bi-search" aria-hidden="true"></i>
+                                    </span>
+                                </span>
+                            {% else %}
+                                <span class="input-group-text search-engine-icon">
+                                    <i class="bi bi-search" aria-hidden="true"></i>
+                                </span>
+                            {% endif %}
+                            <input
+                                type="search"
+                                class="form-control"
+                                name="q"
+                                placeholder="Search…"
+                                aria-label="Search the web"
+                                required
+                            />
+                            <button
+                                type="submit"
+                                class="btn btn-outline-secondary"
+                                aria-label="Submit search"
+                            >
+                                <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <div class="d-flex align-items-center gap-3 ms-auto">
+                        <a
+                            href="{{ url_for("dashboard.home") }}"
+                            class="btn btn-link nav-link p-1"
+                            aria-label="Back to the dashboard"
+                        ><i class="bi bi-house" aria-hidden="true"></i></a>
+                        <button
+                            type="button"
+                            class="btn btn-link nav-link theme-toggle p-1"
+                            data-theme-toggle
+                            aria-label="Toggle dark mode"
+                        >
+                            <i class="bi bi-moon-stars theme-icon" aria-hidden="true"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </nav>

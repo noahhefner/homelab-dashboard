@@ -1,9 +1,51 @@
 from app.model import Bookmark, BookmarkGroup, DashboardConfig, Tile, TileGroup
 from app.security import validate_url
 
+DEFAULT_SEARCH_ENGINE = "https://www.google.com/search?q={query}"
+SEARCH_QUERY_PLACEHOLDER = "{query}"
+
 
 class ConfigValidationError(Exception):
     """Raised when the YAML config is invalid or cannot be parsed into the model."""
+
+
+def _parse_search_engine(value):
+    """Return the search engine URL template, or the default when invalid.
+
+    A valid value is a non-empty string containing the ``{query}`` placeholder.
+    Invalid or absent values fall back to the default search engine rather than
+    raising, so a user typo never breaks the dashboard (spec FR-005/FR-006).
+    """
+    if not isinstance(value, str) or not value.strip():
+        return DEFAULT_SEARCH_ENGINE
+    return value if SEARCH_QUERY_PLACEHOLDER in value else DEFAULT_SEARCH_ENGINE
+
+
+def _parse_search_engine_icon(value):
+    """Return the search engine icon URL, or None when invalid/absent.
+
+    A valid value is a valid http/https URL (same rule as tile/bookmark icons).
+    Invalid or absent values return None so the template falls back to the
+    default magnifying-glass icon (spec FR-012/FR-013).
+    """
+    if not isinstance(value, str) or not value.strip():
+        return None
+    return value if validate_url(value) else None
+
+
+def _build_search_action(search_engine):
+    """Return the form action URL, stripping the ``{query}`` placeholder.
+
+    The ``{query}`` placeholder sits at the end of a query fragment such as
+    ``?q={query}`` or ``&q={query}``. The search input is named ``q``, so the
+    browser appends ``?q=<encoded-terms>`` on submit. Stripping the placeholder
+    and its ``?q=``/``&q=`` prefix from the action avoids an empty/duplicated
+    query parameter (spec FR-003/FR-004).
+    """
+    for marker in ("?q={query}", "&q={query}"):
+        if marker in search_engine:
+            return search_engine.replace(marker, "")
+    return search_engine.replace(SEARCH_QUERY_PLACEHOLDER, "")
 
 
 def _require_non_empty(value, field, where):
@@ -108,4 +150,13 @@ def parse_dashboard(data):
     for index, gdata in enumerate(raw_groups):
         groups.append(_parse_group(gdata, index))
 
-    return DashboardConfig(title=title, tile_groups=tile_groups, bookmark_groups=groups)
+    search_engine = _parse_search_engine(data.get("search_engine"))
+    search_engine_icon = _parse_search_engine_icon(data.get("search_engine_icon"))
+
+    return DashboardConfig(
+        title=title,
+        tile_groups=tile_groups,
+        bookmark_groups=groups,
+        search_engine=search_engine,
+        search_engine_icon=search_engine_icon,
+    )
