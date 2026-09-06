@@ -2,7 +2,7 @@
 
 A self-hosted, single-page dashboard homepage for your home server. It renders your tiles and grouped bookmarks from one YAML file, served by a small Flask app inside a single Docker container.
 
-<img width="1616" height="909" alt="image" src="https://github.com/user-attachments/assets/cfad9215-2c6a-492b-8547-e1b15871e812" />
+<img width="1364" height="881" alt="image" src="https://github.com/user-attachments/assets/5dba3602-35c2-4f51-b78c-63f482cda12f" />
 
 ## Features
 
