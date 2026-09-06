@@ -41,9 +41,7 @@ def test_malformed_yaml_rejected_with_specific_message():
 
 
 def test_valid_yaml_format_violation_rejected():
-    error = validate_content(
-        'title: Homelab\ntile_groups: "a string, not a list"'
-    )
+    error = validate_content('title: Homelab\ntile_groups: "a string, not a list"')
     assert error is not None
     assert "tile_groups" in error
 

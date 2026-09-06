@@ -4,6 +4,7 @@ import pytest
 import yaml
 
 from app import create_app
+from tests.soup_utils import parse
 
 
 def _write_config(tmpdir, data):
@@ -17,7 +18,11 @@ def _render(tmpdir, group):
     app = create_app(config_path=_write_config(tmpdir, data))
     resp = app.test_client().get("/")
     assert resp.status_code == 200
-    return resp.get_data(as_text=True)
+    return parse(resp.get_data(as_text=True))
+
+
+def _bookmark_links(soup):
+    return soup.select("a.bookmark-link")
 
 
 @pytest.fixture
@@ -34,11 +39,14 @@ def group():
 
 
 def test_bookmark_without_icon_renders_monogram(tmpdir, group):
-    html = _render(tmpdir, group)
-    assert "YouTube" in html
-    assert "<img" not in html
+    soup = _render(tmpdir, group)
+    link = _bookmark_links(soup)[0]
+    assert link.select_one("span.bookmark-label").get_text() == "YouTube"
+    assert soup.find("img") is None
     # The fallback is a circle with the first letter of the label.
-    assert '<span class="bookmark-monogram">Y</span>' in html
+    monogram = link.select_one("span.bookmark-monogram")
+    assert monogram is not None
+    assert monogram.get_text() == "Y"
 
 
 # --- T005: a short-word (non-URL) icon renders a monogram, no <img> ----------
@@ -46,11 +54,14 @@ def test_bookmark_without_icon_renders_monogram(tmpdir, group):
 
 def test_bookmark_with_short_word_icon_renders_monogram(tmpdir, group):
     group["bookmarks"][0]["icon"] = "youtube"
-    html = _render(tmpdir, group)
-    assert "YouTube" in html
-    assert 'src="youtube"' not in html
-    assert "<img" not in html
-    assert '<span class="bookmark-monogram">Y</span>' in html
+    soup = _render(tmpdir, group)
+    link = _bookmark_links(soup)[0]
+    assert link.select_one("span.bookmark-label").get_text() == "YouTube"
+    assert soup.find("img") is None
+    assert "youtube" not in (img.get("src") for img in soup.find_all("img"))
+    monogram = link.select_one("span.bookmark-monogram")
+    assert monogram is not None
+    assert monogram.get_text() == "Y"
 
 
 # --- T006: an unsafe icon value is never emitted as an <img src> -------------
@@ -58,10 +69,15 @@ def test_bookmark_with_short_word_icon_renders_monogram(tmpdir, group):
 
 def test_unsafe_icon_value_not_rendered_as_src(tmpdir, group):
     group["bookmarks"][0]["icon"] = "javascript:alert(1)"
-    html = _render(tmpdir, group)
-    assert 'src="javascript:' not in html
-    assert "<img" not in html
-    assert '<span class="bookmark-monogram">Y</span>' in html
+    soup = _render(tmpdir, group)
+    link = _bookmark_links(soup)[0]
+    assert soup.find("img") is None
+    assert not any(
+        (img.get("src") or "").startswith("javascript:") for img in soup.find_all("img")
+    )
+    monogram = link.select_one("span.bookmark-monogram")
+    assert monogram is not None
+    assert monogram.get_text() == "Y"
 
 
 # --- T007: label escaped and link still opens in a new tab -------------------
@@ -73,11 +89,14 @@ def test_bookmark_label_is_html_escaped(tmpdir):
         "bookmarks": [{"label": "<script>alert('x')</script>", "url": "https://x.com"}],
     }
     html = _render(tmpdir, group)
-    assert "<script>alert('x')</script>" not in html
-    assert "&lt;script&gt;" in html
+    assert "<script>alert('x')</script>" not in str(html)
+    link = _bookmark_links(html)[0]
+    label = link.select_one("span.bookmark-label")
+    assert label.get_text() == "<script>alert('x')</script>"
 
 
 def test_bookmark_link_opens_in_new_tab(tmpdir, group):
-    html = _render(tmpdir, group)
-    assert 'target="_blank"' in html
-    assert "noopener" in html
+    soup = _render(tmpdir, group)
+    link = _bookmark_links(soup)[0]
+    assert link.get("target") == "_blank"
+    assert link.get("rel") == ["noopener", "noreferrer"]

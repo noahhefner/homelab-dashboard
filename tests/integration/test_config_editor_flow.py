@@ -4,6 +4,7 @@ import time
 import yaml
 
 from app import create_app
+from tests.soup_utils import parse
 
 
 def _write(path, data):
@@ -79,9 +80,12 @@ def test_save_round_trips_exact_bytes(tmp_path):
     _bump_mtime(cfg)
     time.sleep(0.01)
     html = client.get("/config").get_data(as_text=True)
+    soup = parse(html)
+    editor = soup.select_one("#config-editor")
+    assert editor is not None
     # The rendered page contains the exact text (no reformatting); quotes are
     # HTML-escaped for injection safety (FR-009).
-    assert "comment preserved" in html
+    assert "comment preserved" in editor.get_text()
     assert "&#34;Plex&#34;" in html
 
 
@@ -151,8 +155,10 @@ def test_get_config_renders_current_yaml(tmp_path):
     client = app.test_client()
 
     html = client.get("/config").get_data(as_text=True)
-    assert "config-editor" in html  # editing enabled -> textarea present
-    assert "tile_groups: []" in html
+    soup = parse(html)
+    editor = soup.select_one("#config-editor")
+    assert editor is not None  # editing enabled -> textarea present
+    assert "tile_groups: []" in editor.get_text()
 
 
 def test_config_error_page_when_file_missing(tmp_path):
@@ -171,8 +177,10 @@ def test_homepage_links_to_config_when_editing_enabled(tmp_path):
     client = app.test_client()
 
     html = client.get("/").get_data(as_text=True)
-    assert "config-link" in html
-    assert "Edit configuration" in html
+    soup = parse(html)
+    config_link = soup.select_one(".config-link")
+    assert config_link is not None
+    assert config_link.get("aria-label") == "Edit configuration"
 
 
 def test_homepage_has_no_config_link_when_disabled(tmp_path):
@@ -181,8 +189,9 @@ def test_homepage_has_no_config_link_when_disabled(tmp_path):
     client = app.test_client()
 
     html = client.get("/").get_data(as_text=True)
-    assert "config-link" not in html
-    assert "Edit configuration" not in html
+    soup = parse(html)
+    assert soup.select_one(".config-link") is None
+    assert "Edit configuration" not in soup.get_text()
 
 
 # --- recovery ---

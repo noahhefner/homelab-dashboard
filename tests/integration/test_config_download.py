@@ -1,6 +1,7 @@
 import yaml
 
 from app import create_app
+from tests.soup_utils import parse
 
 
 def _write(path, data):
@@ -101,10 +102,11 @@ def test_config_page_renders_icon_source_links_editing(tmp_path):
     app = create_app(config_path=str(cfg))
     client = app.test_client()
 
-    html = client.get("/config").get_data(as_text=True)
-    assert "Icon sources" in html
-    assert "dashboardicons.com" in html
-    assert "homarr-labs/dashboard-icons" in html
+    soup = parse(client.get("/config").get_data(as_text=True))
+    link_texts = [a.get_text(strip=True) for a in soup.select("a")]
+    assert "Icon sources" in soup.get_text()
+    assert "dashboardicons.com" in link_texts
+    assert "homarr-labs/dashboard-icons" in link_texts
 
 
 def test_config_page_renders_icon_source_links_readonly(tmp_path):
@@ -113,10 +115,11 @@ def test_config_page_renders_icon_source_links_readonly(tmp_path):
     app = create_app(config_path=str(cfg))
     client = app.test_client()
 
-    html = client.get("/config").get_data(as_text=True)
-    assert "Icon sources" in html
-    assert "dashboardicons.com" in html
-    assert "homarr-labs/dashboard-icons" in html
+    soup = parse(client.get("/config").get_data(as_text=True))
+    link_texts = [a.get_text(strip=True) for a in soup.select("a")]
+    assert "Icon sources" in soup.get_text()
+    assert "dashboardicons.com" in link_texts
+    assert "homarr-labs/dashboard-icons" in link_texts
 
 
 def test_icon_links_open_new_tab_safely(tmp_path):
@@ -125,9 +128,19 @@ def test_icon_links_open_new_tab_safely(tmp_path):
     app = create_app(config_path=str(cfg))
     client = app.test_client()
 
-    html = client.get("/config").get_data(as_text=True)
-    assert 'target="_blank"' in html
-    assert 'rel="noopener noreferrer"' in html
+    soup = parse(client.get("/config").get_data(as_text=True))
+    links = [
+        a
+        for a in soup.select("a")
+        if a.get_text(strip=True)
+        in ("dashboardicons.com", "homarr-labs/dashboard-icons")
+    ]
+    assert len(links) == 2
+    for link in links:
+        assert link.get("target") == "_blank"
+        rel = link.get("rel") or []
+        assert "noopener" in rel
+        assert "noreferrer" in rel
 
 
 # --- US1: download button rendered in both modes ---
@@ -139,5 +152,7 @@ def test_download_button_rendered_in_both_modes(tmp_path):
         _write(cfg, _download_config(editor=editor))
         app = create_app(config_path=str(cfg))
         client = app.test_client()
-        html = client.get("/config").get_data(as_text=True)
-        assert "Download config" in html
+        soup = parse(client.get("/config").get_data(as_text=True))
+        assert any(
+            a.get_text(strip=True) == "Download config" for a in soup.select("a")
+        )

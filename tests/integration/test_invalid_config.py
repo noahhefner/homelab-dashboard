@@ -16,10 +16,7 @@ def test_invalid_yaml_renders_error_page(tmp_path):
 def test_missing_required_field_renders_error_page(tmp_path):
     cfg = tmp_path / "config.yaml"
     cfg.write_text(
-        "tile_groups:\n"
-        "  - name: G\n"
-        "    tiles:\n"
-        "      - url: https://example.com\n",
+        "tile_groups:\n  - name: G\n    tiles:\n      - url: https://example.com\n",
         encoding="utf-8",
     )
 

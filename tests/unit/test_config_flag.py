@@ -2,6 +2,7 @@ import yaml
 
 from app import create_app
 from app.config import ConfigLoader
+from tests.soup_utils import parse
 
 
 def _write(path, data):
@@ -10,7 +11,14 @@ def _write(path, data):
 
 def test_editor_disabled_by_default(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"tile_groups": [{"name": "G", "tiles": [{"name": "One", "url": "https://one.lan"}]}]})
+    _write(
+        cfg,
+        {
+            "tile_groups": [
+                {"name": "G", "tiles": [{"name": "One", "url": "https://one.lan"}]}
+            ]
+        },
+    )
     loader = ConfigLoader(str(cfg))
     assert loader.editor_enabled() is False
 
@@ -52,24 +60,40 @@ def test_editor_enabled_when_edit_config_alias_true(tmp_path):
 
 def test_get_config_read_only_when_disabled(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"tile_groups": [{"name": "G", "tiles": [{"name": "One", "url": "https://one.lan"}]}]})
+    _write(
+        cfg,
+        {
+            "tile_groups": [
+                {"name": "G", "tiles": [{"name": "One", "url": "https://one.lan"}]}
+            ]
+        },
+    )
     app = create_app(config_path=str(cfg))
     client = app.test_client()
 
-    html = client.get("/config").get_data(as_text=True)
-    assert "config-editor" not in html
-    assert "save-config" not in html
-    assert "Editing is disabled" in html
+    soup = parse(client.get("/config").get_data(as_text=True))
+    assert soup.select_one("#config-editor") is None
+    assert soup.select_one("#save-config") is None
+    assert "Editing is disabled" in soup.get_text()
 
 
 def test_save_returns_403_when_disabled(tmp_path):
     cfg = tmp_path / "config.yaml"
-    _write(cfg, {"tile_groups": [{"name": "G", "tiles": [{"name": "One", "url": "https://one.lan"}]}]})
+    _write(
+        cfg,
+        {
+            "tile_groups": [
+                {"name": "G", "tiles": [{"name": "One", "url": "https://one.lan"}]}
+            ]
+        },
+    )
     original = cfg.read_text(encoding="utf-8")
     app = create_app(config_path=str(cfg))
     client = app.test_client()
 
-    resp = client.post("/config/save", json={"content": "title: Changed\ntile_groups: []\n"})
+    resp = client.post(
+        "/config/save", json={"content": "title: Changed\ntile_groups: []\n"}
+    )
     assert resp.status_code == 403
     assert "disabled" in resp.get_json()["error"].lower()
     assert cfg.read_text(encoding="utf-8") == original

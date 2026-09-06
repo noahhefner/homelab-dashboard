@@ -88,7 +88,10 @@ def test_non_http_url_raises():
         parse_dashboard(
             {
                 "tile_groups": [
-                    {"name": "G", "tiles": [{"name": "Ftp", "url": "ftp://example.com"}]}
+                    {
+                        "name": "G",
+                        "tiles": [{"name": "Ftp", "url": "ftp://example.com"}],
+                    }
                 ]
             }
         )

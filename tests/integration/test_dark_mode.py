@@ -3,6 +3,7 @@ from pathlib import Path
 import yaml
 
 from app import create_app
+from tests.soup_utils import parse
 
 
 def _write_config(tmpdir, data):
@@ -11,19 +12,25 @@ def _write_config(tmpdir, data):
     return str(path)
 
 
+def _page_soup(tmp_path, data):
+    app = create_app(config_path=_write_config(tmp_path, data))
+    return parse(app.test_client().get("/").get_data(as_text=True))
+
+
 def test_page_sets_a_theme_attribute_on_root(tmp_path):
-    app = create_app(config_path=_write_config(tmp_path, {"title": "MyLab"}))
-    html = app.test_client().get("/").get_data(as_text=True)
+    soup = _page_soup(tmp_path, {"title": "MyLab"})
 
     # The root <html> element carries a data-bs-theme attribute so Bootstrap
     # 5.3 can switch the whole component palette between light and dark.
-    assert '<html lang="en" data-bs-theme=' in html
+    root = soup.find("html")
+    assert root is not None
+    assert root.has_attr("data-bs-theme")
 
 
 def test_navbar_contains_theme_toggle(tmp_path):
-    app = create_app(config_path=_write_config(tmp_path, {"title": "MyLab"}))
-    html = app.test_client().get("/").get_data(as_text=True)
+    soup = _page_soup(tmp_path, {"title": "MyLab"})
 
-    assert "data-theme-toggle" in html
+    toggle = soup.select_one("[data-theme-toggle]")
+    assert toggle is not None
     # The toggle is rendered with an icon element for clear affordance.
-    assert "theme-toggle" in html
+    assert soup.select_one(".theme-toggle i") is not None
