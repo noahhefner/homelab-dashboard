@@ -33,6 +33,17 @@ def _parse_search_engine_icon(value):
     return value if validate_url(value) else None
 
 
+def _parse_bool_flag(value, default=True):
+    """Return ``value`` when it is a boolean, otherwise a safe ``default``.
+
+    Absent or non-boolean values (strings, numbers, null) fall back to the
+    default instead of raising, so a config typo never breaks the dashboard
+    (spec FR-009). Used for the feature-012 visibility flags, which default
+    to enabled.
+    """
+    return value if isinstance(value, bool) else default
+
+
 def _build_search_action(search_engine):
     """Return the form action URL, stripping the ``{query}`` placeholder.
 
@@ -152,6 +163,8 @@ def parse_dashboard(data):
 
     search_engine = _parse_search_engine(data.get("search_engine"))
     search_engine_icon = _parse_search_engine_icon(data.get("search_engine_icon"))
+    show_search = _parse_bool_flag(data.get("show_search"))
+    show_bookmarks = _parse_bool_flag(data.get("show_bookmarks"))
 
     return DashboardConfig(
         title=title,
@@ -159,4 +172,6 @@ def parse_dashboard(data):
         bookmark_groups=groups,
         search_engine=search_engine,
         search_engine_icon=search_engine_icon,
+        show_search=show_search,
+        show_bookmarks=show_bookmarks,
     )

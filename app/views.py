@@ -86,6 +86,7 @@ def view_config():
         config_mtime=_config_mtime(loader.path),
         search_action=_build_search_action(config.search_engine),
         search_engine_icon=config.search_engine_icon,
+        show_search=config.show_search,
         error=None,
         **_static_assets(),
     )
@@ -252,5 +253,7 @@ def home():
         editing_enabled=loader.editor_enabled(),
         search_action=_build_search_action(config.search_engine),
         search_engine_icon=config.search_engine_icon,
+        show_search=config.show_search,
+        show_bookmarks=config.show_bookmarks,
         **_static_assets(),
     )

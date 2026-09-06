@@ -3,6 +3,11 @@
 title: "Home Lab"
 editor: true
 
+# Show the navbar search bar. Set to false to hide it.
+show_search: true
+# Show the bookmarks section. Set to false to hide it.
+show_bookmarks: true
+
 # Search engine for the navbar search bar. A URL template containing a {query}
 # placeholder; the query terms are substituted before opening in a new tab.
 # Omit it to use the default Google engine.

@@ -44,7 +44,7 @@ body {
 }
 
 .theme-toggle,
-.github-link,
+.about-toggle,
 .config-link {
   color: var(--text-muted);
   font-size: 1.25rem;
@@ -73,20 +73,20 @@ body {
 }
 
 .theme-toggle:hover,
-.github-link:hover,
+.about-toggle:hover,
 .config-link:hover {
   color: var(--monogram-bg);
   background-color: rgba(59, 130, 246, 0.08);
 }
 
 [data-bs-theme="dark"] .theme-toggle:hover,
-[data-bs-theme="dark"] .github-link:hover,
+[data-bs-theme="dark"] .about-toggle:hover,
 [data-bs-theme="dark"] .config-link:hover {
   background-color: rgba(79, 139, 250, 0.12);
 }
 
 .theme-toggle:focus-visible,
-.github-link:focus-visible,
+.about-toggle:focus-visible,
 .config-link:focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);

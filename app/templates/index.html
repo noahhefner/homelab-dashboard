@@ -30,40 +30,42 @@
             <div class="container">
                 <div class="d-flex align-items-center w-100">
                     <span class="navbar-brand app-brand me-auto">{{ title }}</span>
-                    <form class="d-none d-md-block mx-auto"
-                          action="{{ search_action }}"
-                          method="get"
-                          target="_blank"
-                          rel="noopener">
-                        <div class="input-group input-group d-none d-md-flex app-search-group">
-                            {% if search_engine_icon %}
-                                <span class="input-group-text bg-transparent">
-                                    <img src="{{ search_engine_icon }}"
-                                         alt="Search engine"
-                                         class="search-engine-icon"
-                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" />
-                                    <span class="search-engine-icon search-engine-icon-fallback">
+                    {% if show_search %}
+                        <form class="d-none d-md-block mx-auto"
+                              action="{{ search_action }}"
+                              method="get"
+                              target="_blank"
+                              rel="noopener">
+                            <div class="input-group input-group d-none d-md-flex app-search-group">
+                                {% if search_engine_icon %}
+                                    <span class="input-group-text bg-transparent">
+                                        <img src="{{ search_engine_icon }}"
+                                             alt="Search engine"
+                                             class="search-engine-icon"
+                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';" />
+                                        <span class="search-engine-icon search-engine-icon-fallback">
+                                            <i class="bi bi-search" aria-hidden="true"></i>
+                                        </span>
+                                    </span>
+                                {% else %}
+                                    <span class="input-group-text bg-transparent">
                                         <i class="bi bi-search" aria-hidden="true"></i>
                                     </span>
-                                </span>
-                            {% else %}
-                                <span class="input-group-text bg-transparent">
-                                    <i class="bi bi-search" aria-hidden="true"></i>
-                                </span>
-                            {% endif %}
-                            <input type="search"
-                                   class="form-control"
-                                   name="q"
-                                   placeholder="Search…"
-                                   aria-label="Search the web"
-                                   required />
-                            <button type="submit"
-                                    class="btn btn-outline-secondary"
-                                    aria-label="Submit search">
-                                <i class="bi bi-arrow-right" aria-hidden="true"></i>
-                            </button>
-                        </div>
-                    </form>
+                                {% endif %}
+                                <input type="search"
+                                       class="form-control"
+                                       name="q"
+                                       placeholder="Search…"
+                                       aria-label="Search the web"
+                                       required />
+                                <button type="submit"
+                                        class="btn btn-outline-secondary"
+                                        aria-label="Submit search">
+                                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </form>
+                    {% endif %}
                     <div class="d-flex align-items-center gap-3 ms-auto">
                         <button type="button"
                                 class="btn btn-link nav-link theme-toggle p-1"
@@ -79,13 +81,13 @@
                                 <i class="bi bi-terminal" aria-hidden="true"></i>
                             </a>
                         {% endif %}
-                        <a href="https://github.com/noahhefner/homelab-dashboard"
-                           class="btn btn-link nav-link github-link p-1"
-                           target="_blank"
-                           rel="noopener noreferrer"
-                           aria-label="View source on GitHub">
-                            <i class="bi bi-github" aria-hidden="true"></i>
-                        </a>
+                        <button type="button"
+                                class="btn btn-link nav-link about-toggle p-1"
+                                data-bs-toggle="modal"
+                                data-bs-target="#about-modal"
+                                aria-label="About">
+                            <i class="bi bi-info-circle" aria-hidden="true"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -94,7 +96,7 @@
             <div class="container py-4">
                 <div class="row g-4">
                     <!-- Tiles: main area, full width on mobile, left ~75% on desktop (lg+) -->
-                    <section aria-label="Tiles" class="col-12 col-lg-9">
+                    <section aria-label="Tiles" class="col-12 {{ 'col-lg-9' if show_bookmarks }}">
                         {% for group in tile_groups %}
                             <div class="tile-group">
                                 <h3 class="group-title">
@@ -138,58 +140,98 @@
                         {% endfor %}
                     </section>
                     <!-- Bookmarks: below the apps on mobile, right column on desktop (lg+) -->
-                    <aside aria-label="Bookmarks" class="col-12 col-lg-3">
-                        {% if bookmark_groups %}
-                            <h3 class="group-title">Bookmarks</h3>
-                            <div class="accordion" id="bookmark-accordion">
-                                {% for group in bookmark_groups %}
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="bookmark-heading-{{ loop.index }}">
-                                            <button type="button"
-                                                    class="accordion-button {{ 'collapsed' if group.collapsed }}"
-                                                    data-bs-toggle="collapse"
-                                                    data-bs-target="#bookmark-collapse-{{ loop.index }}"
-                                                    aria-expanded="{{ 'false' if group.collapsed else 'true' }}"
-                                                    aria-controls="bookmark-collapse-{{ loop.index }}">{{ group.name }}</button>
-                                        </h2>
-                                        <div id="bookmark-collapse-{{ loop.index }}"
-                                             class="accordion-collapse collapse {{ 'show' if not group.collapsed }}">
-                                            <div class="accordion-body">
-                                                <ul class="bookmark-list">
-                                                    {% for bookmark in group.bookmarks %}
-                                                        <li>
-                                                            <a href="{{ bookmark.url }}"
-                                                               class="bookmark-link"
-                                                               target="_blank"
-                                                               rel="noopener noreferrer"
-                                                               title="{{ bookmark.label }}">
-                                                                {% if bookmark.icon and bookmark.icon is url %}
-                                                                    <img src="{{ bookmark.icon }}"
-                                                                         alt="{{ bookmark.label }} Icon"
-                                                                         class="bookmark-icon"
-                                                                         loading="lazy"
-                                                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                                                                    <span class="bookmark-monogram monogram-fallback">{{ bookmark.label[:1]|upper }}</span>
-                                                                {% else %}
-                                                                    <span class="bookmark-monogram">{{ bookmark.label[:1]|upper }}</span>
-                                                                {% endif %}
-                                                                <span class="bookmark-label text-truncate">{{ bookmark.label }}</span>
-                                                            </a>
-                                                        </li>
-                                                    {% endfor %}
-                                                </ul>
+                    {% if show_bookmarks %}
+                        <aside aria-label="Bookmarks" class="col-12 col-lg-3">
+                            {% if bookmark_groups %}
+                                <h3 class="group-title">Bookmarks</h3>
+                                <div class="accordion" id="bookmark-accordion">
+                                    {% for group in bookmark_groups %}
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="bookmark-heading-{{ loop.index }}">
+                                                <button type="button"
+                                                        class="accordion-button {{ 'collapsed' if group.collapsed }}"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#bookmark-collapse-{{ loop.index }}"
+                                                        aria-expanded="{{ 'false' if group.collapsed else 'true' }}"
+                                                        aria-controls="bookmark-collapse-{{ loop.index }}">{{ group.name }}</button>
+                                            </h2>
+                                            <div id="bookmark-collapse-{{ loop.index }}"
+                                                 class="accordion-collapse collapse {{ 'show' if not group.collapsed }}">
+                                                <div class="accordion-body">
+                                                    <ul class="bookmark-list">
+                                                        {% for bookmark in group.bookmarks %}
+                                                            <li>
+                                                                <a href="{{ bookmark.url }}"
+                                                                   class="bookmark-link"
+                                                                   target="_blank"
+                                                                   rel="noopener noreferrer"
+                                                                   title="{{ bookmark.label }}">
+                                                                    {% if bookmark.icon and bookmark.icon is url %}
+                                                                        <img src="{{ bookmark.icon }}"
+                                                                             alt="{{ bookmark.label }} Icon"
+                                                                             class="bookmark-icon"
+                                                                             loading="lazy"
+                                                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                                                                        <span class="bookmark-monogram monogram-fallback">{{ bookmark.label[:1]|upper }}</span>
+                                                                    {% else %}
+                                                                        <span class="bookmark-monogram">{{ bookmark.label[:1]|upper }}</span>
+                                                                    {% endif %}
+                                                                    <span class="bookmark-label text-truncate">{{ bookmark.label }}</span>
+                                                                </a>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <p class="text-muted">No bookmarks configured yet.</p>
-                        {% endif %}
-                    </aside>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted">No bookmarks configured yet.</p>
+                            {% endif %}
+                        </aside>
+                    {% endif %}
                 </div>
             </div>
         </main>
+        <div class="modal fade"
+             id="about-modal"
+             tabindex="-1"
+             aria-labelledby="about-modal-title"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-4" id="about-modal-title">About</h1>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            A single-page dashboard for your home server. Renders your tiles and
+                            grouped bookmarks from one YAML file, served by a small Flask app inside
+                            a single Docker container.
+                        </p>
+                        <p>
+                            Everything is configured in a single YAML file — by default
+                            <code>config/example.yaml</code>. Set the <code>CONFIG_PATH</code>
+                            environment variable to use a different file.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="https://github.com/noahhefner/homelab-dashboard"
+                           class="btn btn-outline-primary"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            View on GitHub
+                            <i class="bi bi-box-arrow-up-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% for js in js_assets %}
             <script type="module" src="{{ url_for('static', filename=js) }}"></script>
         {% endfor %}

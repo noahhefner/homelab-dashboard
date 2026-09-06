@@ -224,3 +224,66 @@ def test_search_engine_icon_preserved_when_valid_url():
 def test_search_engine_icon_none_when_invalid_url():
     config = parse_dashboard({"search_engine_icon": "javascript:alert(1)"})
     assert config.search_engine_icon is None
+
+
+# --- Feature visibility flags (feature-012) ----------------------------------
+
+
+def test_show_search_defaults_to_true_when_absent():
+    config = parse_dashboard({})
+    assert config.show_search is True
+
+
+def test_show_search_preserved_when_false():
+    config = parse_dashboard({"show_search": False})
+    assert config.show_search is False
+
+
+def test_show_search_preserved_when_true():
+    config = parse_dashboard({"show_search": True})
+    assert config.show_search is True
+
+
+def test_show_search_falls_back_to_true_when_string():
+    config = parse_dashboard({"show_search": "yes"})
+    assert config.show_search is True
+
+
+def test_show_search_falls_back_to_true_when_number():
+    config = parse_dashboard({"show_search": 0})
+    assert config.show_search is True
+
+
+def test_show_search_falls_back_to_true_when_null():
+    config = parse_dashboard({"show_search": None})
+    assert config.show_search is True
+
+
+def test_show_bookmarks_defaults_to_true_when_absent():
+    config = parse_dashboard({})
+    assert config.show_bookmarks is True
+
+
+def test_show_bookmarks_preserved_when_false():
+    config = parse_dashboard({"show_bookmarks": False})
+    assert config.show_bookmarks is False
+
+
+def test_show_bookmarks_preserved_when_true():
+    config = parse_dashboard({"show_bookmarks": True})
+    assert config.show_bookmarks is True
+
+
+def test_show_bookmarks_falls_back_to_true_when_string():
+    config = parse_dashboard({"show_bookmarks": "false"})
+    assert config.show_bookmarks is True
+
+
+def test_show_bookmarks_falls_back_to_true_when_number():
+    config = parse_dashboard({"show_bookmarks": 1})
+    assert config.show_bookmarks is True
+
+
+def test_show_bookmarks_falls_back_to_true_when_null():
+    config = parse_dashboard({"show_bookmarks": None})
+    assert config.show_bookmarks is True

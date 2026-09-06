@@ -39,7 +39,8 @@ def test_example_yaml_parses_to_valid_config():
 def test_contract_fields(example_config_data):
     # Per contract: root mapping, optional title/tiles/tile_groups/bookmark_groups
     # plus the feature-008 opt-in `editor`/`edit_config` flag (data-model.md),
-    # and the feature-011 `search_engine`/`search_engine_icon` keys.
+    # the feature-011 `search_engine`/`search_engine_icon` keys, and the
+    # feature-012 `show_search`/`show_bookmarks` visibility flags.
     allowed = {
         "title",
         "tiles",
@@ -49,6 +50,8 @@ def test_contract_fields(example_config_data):
         "edit_config",
         "search_engine",
         "search_engine_icon",
+        "show_search",
+        "show_bookmarks",
     }
     assert set(example_config_data) <= allowed
 
@@ -127,3 +130,36 @@ def test_contract_search_engine_icon_invalid_url_is_none():
 def test_contract_search_engine_icon_empty_string_is_none():
     config = parse_dashboard({"search_engine_icon": ""})
     assert config.search_engine_icon is None
+
+
+# --- Feature visibility flags contract (feature-012) ------------------------
+
+
+def test_contract_show_search_absent_defaults_to_true():
+    config = parse_dashboard({})
+    assert config.show_search is True
+
+
+def test_contract_show_search_false_is_preserved():
+    config = parse_dashboard({"show_search": False})
+    assert config.show_search is False
+
+
+def test_contract_show_search_non_boolean_falls_back_to_true():
+    config = parse_dashboard({"show_search": "false"})
+    assert config.show_search is True
+
+
+def test_contract_show_bookmarks_absent_defaults_to_true():
+    config = parse_dashboard({})
+    assert config.show_bookmarks is True
+
+
+def test_contract_show_bookmarks_false_is_preserved():
+    config = parse_dashboard({"show_bookmarks": False})
+    assert config.show_bookmarks is False
+
+
+def test_contract_show_bookmarks_non_boolean_falls_back_to_true():
+    config = parse_dashboard({"show_bookmarks": 0})
+    assert config.show_bookmarks is True

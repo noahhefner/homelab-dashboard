@@ -1,4 +1,14 @@
+<div align="center">
+
 # Homelab Dashboard
+
+![uv](https://img.shields.io/badge/uv-%23DE5FE9.svg?style=for-the-badge&logo=uv&logoColor=white)
+![Python](https://img.shields.io/badge/python-%233670A0.svg?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
+![PNPM](https://img.shields.io/badge/pnpm-%234a4a4a.svg?style=for-the-badge&logo=pnpm&logoColor=f69220)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+
+</div>
 
 A single-page dashboard for your home server. Renders your tiles and grouped bookmarks from one YAML file, served by a small Flask app inside a single Docker container.
 
@@ -142,7 +152,7 @@ services:
 # Run tests with uv
 uv run pytest
 
-# Makefile target
+# Or use the Makefile target
 make test
 ```
 
@@ -153,6 +163,7 @@ Formatting and linting commands are provided by the `Makefile`:
 ```sh
 # Check everything
 make check
+
 # Format everything
 make fix
 ```
