@@ -11,38 +11,32 @@
         <link
             rel="icon"
             type="image/x-icon"
-            href="{{ url_for('static', filename='favicon_io/favicon.ico') }}"
+            href="{{ url_for('static', filename='favicon/favicon.ico') }}"
         />
         <link
             rel="icon"
             type="image/png"
             sizes="32x32"
-            href="{{ url_for('static', filename='favicon_io/favicon-32x32.png') }}"
+            href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}"
         />
         <link
             rel="icon"
             type="image/png"
             sizes="16x16"
-            href="{{ url_for('static', filename='favicon_io/favicon-16x16.png') }}"
+            href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}"
         />
         <link
             rel="apple-touch-icon"
             sizes="180x180"
-            href="{{ url_for('static', filename='favicon_io/apple-touch-icon.png') }}"
+            href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}"
         />
         <link
             rel="manifest"
-            href="{{ url_for('static', filename='favicon_io/site.webmanifest') }}"
+            href="{{ url_for('static', filename='favicon/site.webmanifest') }}"
         />
-        <link
-            rel="stylesheet"
-            href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}"
-        />
-        <link
-            rel="stylesheet"
-            href="{{ url_for('static', filename='bootstrap-icons/bootstrap-icons.min.css') }}"
-        />
-        <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
+        {% for css in css_assets %}
+            <link rel="stylesheet" href="{{ url_for('static', filename=css) }}">
+        {% endfor %}
     </head>
     <body>
         <nav class="navbar app-navbar navbar-expand" aria-label="Primary">
@@ -52,7 +46,7 @@
                     <form
                         class="d-none d-md-block mx-auto"
                         action="{{ search_action }}"
-                        method="get"
+                        method="GET"
                         target="_blank"
                         rel="noopener"
                     >
@@ -130,7 +124,21 @@
                     <section aria-label="Tiles" class="col-12 col-lg-9">
                         {% for group in tile_groups %}
                             <div class="tile-group">
-                                <h3 class="group-title">{{ group.name }}</h3>
+                                <h3 class="group-title">
+                                    {% if group.icon and group.icon is url %}
+                                        <img
+                                            class="tile-group-icon"
+                                            src="{{ group.icon }}"
+                                            alt="{{ group.name }} Icon"
+                                            loading="lazy"
+                                            onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';"
+                                        />
+                                        <span class="tile-group-monogram monogram-fallback">{{ group.name[:1]|upper }}</span>
+                                    {% elif group.icon %}
+                                        <span class="tile-group-monogram">{{ group.name[:1]|upper }}</span>
+                                    {% endif %}
+                                    <span class="tile-group-name">{{ group.name }}</span>
+                                </h3>
                                 <div class="row g-3">
                                     {% for tile in group.tiles %}
                                         <div class="col-6 col-sm-4 col-md-3 col-xl-2">
@@ -223,9 +231,8 @@
                 </div>
             </div>
         </main>
-        <script
-            src="{{ url_for('static', filename='bootstrap/js/bootstrap.bundle.min.js') }}"
-        ></script>
-        <script src="{{ url_for('static', filename='app.js') }}"></script>
+        {% for js in js_assets %}
+            <script type="module" src="{{ url_for('static', filename=js) }}"></script>
+        {% endfor %}
     </body>
 </html>

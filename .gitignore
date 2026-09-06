@@ -15,9 +15,8 @@ build/
 # pnpm / Node
 node_modules/
 
-# Provisioned Bootstrap assets (populated by pnpm provision)
-app/static/bootstrap/
-app/static/bootstrap-icons/
+# Frontend bundles
+app/static/
 
 # Universal
 .DS_Store

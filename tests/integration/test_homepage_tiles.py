@@ -25,7 +25,11 @@ def test_homepage_renders_all_example_tiles():
     app = create_app(config_path=str(EXAMPLE_YAML))
     html = app.test_client().get("/").get_data(as_text=True)
 
-    configured_names = [s["name"] for s in data.get("tiles", [])]
+    configured_names = [
+        tile["name"]
+        for group in data.get("tile_groups", [])
+        for tile in group.get("tiles", [])
+    ]
     assert configured_names, "example config should have tiles"
     for name in configured_names:
         assert name in html
@@ -72,21 +76,6 @@ def test_tile_groups_render_in_declared_order(tmpdir):
     assert html.index("First") < html.index("Second")
 
 
-def test_mixed_flat_and_grouped_tiles_render(tmpdir):
-    data = {
-        "tiles": [{"name": "Flat", "url": "https://flat.lan"}],
-        "tile_groups": [
-            {"name": "G", "tiles": [{"name": "Grouped", "url": "https://g.lan"}]}
-        ],
-    }
-    html = _html_for(tmpdir, data)
-    assert "Flat" in html
-    assert "Grouped" in html
-    # Flat tiles appear before the first group header.
-    assert ">Flat<" in html
-    assert html.index(">Flat<") < html.index("group-title")
-
-
 # --- User Story 3: optional tile-group icon renders beside the group name -------
 
 
@@ -103,6 +92,25 @@ def test_tile_group_with_icon_renders_img_beside_name(tmpdir):
     }
     html = _html_for(tmpdir, data)
     assert f'src="{icon}"' in html
+    # The icon renders inside the group header, before the group name.
+    header = html.split('</h3>')[0]
+    assert f'src="{icon}"' in header
+
+
+def test_tile_group_with_non_url_icon_renders_monogram(tmpdir):
+    data = {
+        "tile_groups": [
+            {
+                "name": "Media",
+                "icon": "media",
+                "tiles": [{"name": "Plex", "url": "https://plex.lan"}],
+            }
+        ]
+    }
+    html = _html_for(tmpdir, data)
+    # A plain-word icon must NOT become an <img src>; the group shows a monogram.
+    assert 'class="tile-group-icon"' not in html
+    assert '<span class="tile-group-monogram">M</span>' in html
 
 
 def test_tile_group_without_icon_renders_name_alone(tmpdir):
@@ -134,7 +142,11 @@ def test_bookmarks_header_renders_above_accordion(tmpdir):
 
 
 def test_bookmarks_header_omitted_when_no_bookmark_groups(tmpdir):
-    data = {"tiles": [{"name": "Plex", "url": "https://plex.lan"}]}
+    data = {
+        "tile_groups": [
+            {"name": "G", "tiles": [{"name": "Plex", "url": "https://plex.lan"}]}
+        ]
+    }
     html = _html_for(tmpdir, data)
     assert "No bookmarks configured yet." in html
     # The hardcoded header is scoped to bookmark groups; a bare config must not
@@ -146,5 +158,12 @@ def test_bookmarks_header_omitted_when_no_bookmark_groups(tmpdir):
 
 
 def test_homepage_main_section_labeled_tiles(tmpdir):
-    html = _html_for(tmpdir, {"tiles": [{"name": "Plex", "url": "https://plex.lan"}]})
+    html = _html_for(
+        tmpdir,
+        {
+            "tile_groups": [
+                {"name": "G", "tiles": [{"name": "Plex", "url": "https://plex.lan"}]}
+            ]
+        },
+    )
     assert 'aria-label="Tiles"' in html

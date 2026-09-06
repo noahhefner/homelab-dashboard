@@ -28,9 +28,9 @@ def _setup(path, data):
 def _editor_config(extra_tiles=None, title="Homelab"):
     cfg = {"editor": True, "title": title}
     if extra_tiles:
-        cfg["tiles"] = extra_tiles
+        cfg["tile_groups"] = [{"name": "G", "tiles": extra_tiles}]
     else:
-        cfg["tiles"] = []
+        cfg["tile_groups"] = []
     return cfg
 
 
@@ -46,7 +46,7 @@ def test_save_reflected_on_next_request(tmp_path):
 
     resp = client.post(
         "/config/save",
-        json={"content": "editor: true\ntitle: After\ntiles: []\n"},
+        json={"content": "editor: true\ntitle: After\ntile_groups: []\n"},
     )
     assert resp.status_code == 200
 
@@ -67,9 +67,11 @@ def test_save_round_trips_exact_bytes(tmp_path):
         "title: Homelab\n"
         "\n"
         "# comment preserved \n"
-        "tiles:\n"
-        '  - name: "Plex"\n'
-        "    url: https://plex.lan\n"
+        "tile_groups:\n"
+        "  - name: G\n"
+        "    tiles:\n"
+        '      - name: "Plex"\n'
+        "        url: https://plex.lan\n"
     )
     resp = client.post("/config/save", json={"content": content})
     assert resp.status_code == 200
@@ -92,7 +94,9 @@ def test_malformed_save_leaves_prior_config_intact(tmp_path):
     client = app.test_client()
     original = cfg.read_text(encoding="utf-8")
 
-    resp = client.post("/config/save", json={"content": "tiles:\n  - name: [oops"})
+    resp = client.post(
+        "/config/save", json={"content": "tile_groups:\n  - name: [oops"}
+    )
     assert resp.status_code == 400
     assert cfg.read_text(encoding="utf-8") == original
 
@@ -110,7 +114,7 @@ def test_format_violation_save_changes_nothing(tmp_path):
 
     resp = client.post(
         "/config/save",
-        json={"content": 'editor: true\ntitle: New\ntiles: "not-a-list"\n'},
+        json={"content": 'editor: true\ntitle: New\ntile_groups: "not-a-list"\n'},
     )
     assert resp.status_code == 400
     assert cfg.read_text(encoding="utf-8") == original
@@ -130,7 +134,7 @@ def test_write_failure_returns_500_and_preserves_file(tmp_path):
     try:
         resp = client.post(
             "/config/save",
-            json={"content": "editor: true\ntitle: New\ntiles: []\n"},
+            json={"content": "editor: true\ntitle: New\ntile_groups: []\n"},
         )
         assert resp.status_code == 500
         assert cfg.read_text(encoding="utf-8") == original
@@ -148,7 +152,7 @@ def test_get_config_renders_current_yaml(tmp_path):
 
     html = client.get("/config").get_data(as_text=True)
     assert "config-editor" in html  # editing enabled -> textarea present
-    assert "tiles: []" in html
+    assert "tile_groups: []" in html
 
 
 def test_config_error_page_when_file_missing(tmp_path):
@@ -173,7 +177,7 @@ def test_homepage_links_to_config_when_editing_enabled(tmp_path):
 
 def test_homepage_has_no_config_link_when_disabled(tmp_path):
     cfg = tmp_path / "config.yaml"
-    app = _setup(cfg, {"tiles": []})
+    app = _setup(cfg, {"tile_groups": []})
     client = app.test_client()
 
     html = client.get("/").get_data(as_text=True)
@@ -197,7 +201,7 @@ def test_save_with_stale_mtime_rejected(tmp_path):
     resp = client.post(
         "/config/save",
         json={
-            "content": "editor: true\ntitle: Overwrite\ntiles: []\n",
+            "content": "editor: true\ntitle: Overwrite\ntile_groups: []\n",
             "config_mtime": mtime,
         },
     )
@@ -214,7 +218,7 @@ def test_save_accepts_current_mtime_as_string_like_browser(tmp_path):
     resp = client.post(
         "/config/save",
         json={
-            "content": "editor: true\ntitle: Fine\ntiles: []\n",
+            "content": "editor: true\ntitle: Fine\ntile_groups: []\n",
             "config_mtime": str(mtime),
         },
     )
@@ -228,7 +232,7 @@ def test_recover_restores_last_known_good(tmp_path):
 
     client.post(
         "/config/save",
-        json={"content": "editor: true\ntitle: Bad\ntiles: []\n"},
+        json={"content": "editor: true\ntitle: Bad\ntile_groups: []\n"},
     )
 
     resp = client.post("/config/restore")

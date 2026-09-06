@@ -54,15 +54,7 @@ def test_tiles_are_plain_anchors_tap_friendly():
     assert 'target="_blank"' in html
     assert 'rel="noopener noreferrer"' in html
 
-
-# --- Offline / vendored Bootstrap (user requirement) ------------------------
-
-
-def test_bootstrap_assets_served_locally():
-    html = _get_home_html()
-    assert "/static/bootstrap/css/bootstrap.min.css" in html
-    assert "/static/bootstrap/js/bootstrap.bundle.min.js" in html
-
+# --- Offline frontend assets (user requirement) -----------------------------
 
 def test_no_remote_or_cdn_asset_urls():
     html = _get_home_html()

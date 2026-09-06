@@ -14,7 +14,7 @@ def _setup_config(path, filename, data, editor=True):
 
 
 def _download_config(editor=True):
-    return {"editor": editor, "title": "Homelab", "tiles": []}
+    return {"editor": editor, "title": "Homelab", "tile_groups": []}
 
 
 # --- US1: GET /config/download ---
@@ -25,9 +25,11 @@ def test_download_returns_exact_bytes_and_filename(tmp_path):
         "title: Homelab\n"
         "\n"
         "# comment preserved \n"
-        "tiles:\n"
-        '  - name: "Plex"\n'
-        "    url: https://plex.lan\n"
+        "tile_groups:\n"
+        "  - name: G\n"
+        "    tiles:\n"
+        '      - name: "Plex"\n'
+        "        url: https://plex.lan\n"
     )
     cfg = tmp_path / "site.yaml"
     cfg.write_text(content, encoding="utf-8")
@@ -43,7 +45,7 @@ def test_download_returns_exact_bytes_and_filename(tmp_path):
 
 
 def test_download_works_when_editing_disabled(tmp_path):
-    content = "title: Homelab\ntiles: []\n"
+    content = "title: Homelab\ntile_groups: []\n"
     cfg = tmp_path / "config.yaml"
     cfg.write_text(content, encoding="utf-8")
     app = create_app(config_path=str(cfg))
@@ -56,7 +58,14 @@ def test_download_works_when_editing_disabled(tmp_path):
 
 
 def test_download_matches_on_disk_bytes_byte_for_byte(tmp_path):
-    content = "title: Homelab\n\ntiles:\n  - name: Emby\n    url: https://emby.lan\n"
+    content = (
+        "title: Homelab\n\n"
+        "tile_groups:\n"
+        "  - name: G\n"
+        "    tiles:\n"
+        "      - name: Emby\n"
+        "        url: https://emby.lan\n"
+    )
     cfg = tmp_path / "lab.yaml"
     cfg.write_text(content, encoding="utf-8")
     app = create_app(config_path=str(cfg))

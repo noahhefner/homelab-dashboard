@@ -1,3 +1,6 @@
+import './app.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 document.addEventListener("DOMContentLoaded", function () {
   
   // ---- Dark mode toggle ----

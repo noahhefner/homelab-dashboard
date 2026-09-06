@@ -11,8 +11,11 @@ RUN corepack enable
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
-COPY scripts/provision-bootstrap.sh scripts/provision-bootstrap.sh
-RUN pnpm provision
+COPY vite.config.mjs /build/vite.config.js
+COPY ./assets /build/assets
+COPY ./public /build/public
+
+RUN pnpm build
 
 # ------------------------------------------------------------------------------
 # Stage 2: Fetch Python packages
@@ -51,9 +54,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1\
     CONFIG_PATH=/app/config/example.yaml
 
-# Copy the provisioned Bootstrap assets from the Node stage.
-COPY --from=frontend-assets /build/app/static/bootstrap ./app/static/bootstrap
-COPY --from=frontend-assets /build/app/static/bootstrap-icons ./app/static/bootstrap-icons
+# Copy the frontend bundles from the Node stage.
+COPY --from=frontend-assets /build/app/static/ ./app/static/
 
 # Copy virtual environment and add to PATH
 COPY --from=python-venv /app/.venv ./.venv

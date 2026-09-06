@@ -6,12 +6,14 @@ from app.schema import DEFAULT_SEARCH_ENGINE, ConfigValidationError, parse_dashb
 def test_valid_full_config():
     data = {
         "title": "My Lab",
-        "tiles": [{"name": "Plex", "url": "https://plex.lan:32400", "icon": "plex"}],
         "tile_groups": [
             {
                 "name": "Media",
                 "icon": "play",
-                "tiles": [{"name": "Emby", "url": "https://emby.lan"}],
+                "tiles": [
+                    {"name": "Plex", "url": "https://plex.lan:32400", "icon": "plex"},
+                    {"name": "Emby", "url": "https://emby.lan"},
+                ],
             }
         ],
         "bookmark_groups": [
@@ -24,13 +26,12 @@ def test_valid_full_config():
     }
     config = parse_dashboard(data)
     assert config.title == "My Lab"
-    assert len(config.tiles) == 1
-    assert config.tiles[0].name == "Plex"
-    assert config.tiles[0].icon == "plex"
     assert len(config.tile_groups) == 1
     assert config.tile_groups[0].name == "Media"
     assert config.tile_groups[0].icon == "play"
-    assert config.tile_groups[0].tiles[0].name == "Emby"
+    assert config.tile_groups[0].tiles[0].name == "Plex"
+    assert config.tile_groups[0].tiles[0].icon == "plex"
+    assert config.tile_groups[0].tiles[1].name == "Emby"
     assert len(config.bookmark_groups) == 1
     assert config.bookmark_groups[0].name == "Media"
     assert config.bookmark_groups[0].bookmarks[0].label == "YouTube"
@@ -39,7 +40,6 @@ def test_valid_full_config():
 def test_empty_config_returns_defaults():
     config = parse_dashboard({})
     assert config.title == "Homelab"
-    assert config.tiles == []
     assert config.tile_groups == []
     assert config.bookmark_groups == []
 
@@ -47,7 +47,6 @@ def test_empty_config_returns_defaults():
 def test_none_config_returns_defaults():
     config = parse_dashboard(None)
     assert config.title == "Homelab"
-    assert config.tiles == []
     assert config.tile_groups == []
 
 
@@ -68,31 +67,44 @@ def test_custom_title_is_preserved_and_stripped():
 
 def test_missing_tile_name_raises():
     with pytest.raises(ConfigValidationError):
-        parse_dashboard({"tiles": [{"url": "https://example.com"}]})
+        parse_dashboard(
+            {"tile_groups": [{"name": "G", "tiles": [{"url": "https://example.com"}]}]}
+        )
 
 
 def test_invalid_tile_url_raises():
     with pytest.raises(ConfigValidationError):
-        parse_dashboard({"tiles": [{"name": "Bad", "url": "not-a-url"}]})
+        parse_dashboard(
+            {
+                "tile_groups": [
+                    {"name": "G", "tiles": [{"name": "Bad", "url": "not-a-url"}]}
+                ]
+            }
+        )
 
 
 def test_non_http_url_raises():
     with pytest.raises(ConfigValidationError):
-        parse_dashboard({"tiles": [{"name": "Ftp", "url": "ftp://example.com"}]})
+        parse_dashboard(
+            {
+                "tile_groups": [
+                    {"name": "G", "tiles": [{"name": "Ftp", "url": "ftp://example.com"}]}
+                ]
+            }
+        )
 
 
 def test_unknown_top_level_keys_ignored():
     config = parse_dashboard({"unknown_key": "ignored", "tiles": []})
-    assert config.tiles == []
+    assert config.tile_groups == []
 
 
 def test_legacy_services_key_not_recognized_as_tiles():
     # Clarification Q1 -> A: the legacy `services`/`service_groups` keys are NOT
-    # supported. A config that only uses them yields an empty tiles list.
+    # supported. A config that only uses them yields no tile groups.
     config = parse_dashboard(
         {"services": [{"name": "Plex", "url": "https://plex.lan"}]}
     )
-    assert config.tiles == []
     assert config.tile_groups == []
 
 

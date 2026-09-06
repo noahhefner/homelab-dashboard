@@ -4,11 +4,14 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "provision": "scripts/provision-bootstrap.sh",
+    "build": "vite build",
     "setup": "pnpm install && pnpm provision"
   },
   "dependencies": {
     "bootstrap": "5.3.8",
     "bootstrap-icons": "^1.13.1"
+  },
+  "devDependencies": {
+    "vite": "^8.2.2"
   }
 }

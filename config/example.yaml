@@ -36,7 +36,7 @@ tile_groups:
         url: "https://unifi.lan:8443"
 
   - name: Cloud & Webmail
-    icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/protonmail.svg"
+    icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudstream.svg"
     tiles:
       - name: Webmail
         url: "https://mail.example.com"

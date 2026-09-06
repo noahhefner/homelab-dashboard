@@ -34,10 +34,12 @@ search_engine: "https://duckduckgo.com/?q={query}"
 # Optional icon shown next to the search bar (external image URL).
 search_engine_icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/duckduckgo.svg"
 
-# Tiles can also be organized into named groups. Tile groups are always
-# visible (no collapse/expand), unlike bookmark groups.
+# Tiles are organized into named groups. Tile groups are always visible (no 
+# collapse/expand), unlike bookmark groups.
 tile_groups:
   - name: Cloud & Webmail
+    # Optional: Display an icon for the tile group.
+    icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudstream.svg"
     tiles:
       - name: Webmail
         url: "https://mail.example.com"
@@ -56,27 +58,46 @@ bookmark_groups:
         url: "https://open.spotify.com"
 ```
 
-## Bootstrap Assets
-
-The Bootstrap and Bootstrap Icons assets are **not** committed to source control. They are tracked as dependencies in [`package.json`](package.json) (pinned versions) with `pnpm`, and provisioned into `app/static/` by copying the compiled files from the installed packages.
-
-Provision on a fresh checkout:
-
-```bash
-pnpm setup        # = pnpm install && pnpm provision
-```
-
-After provisioning, `app/static/bootstrap/css/bootstrap.min.css` and
-`app/static/bootstrap/js/bootstrap.bundle.min.js` exist, plus the Bootstrap Icons CSS and fonts under `app/static/bootstrap-icons/`, and the page is styled.
-
 ## Local Run (Development)
 
-Create a `config/local.yaml` file for testing. (`local.yaml` is gitignored).
+**Build Frontend Bundles**
+
+First download and bundle the frontend assets with `pnpm`. This command will download frontend dependencies from npm, bundle them, and drop the bundles into `app/static`:
+
+```sh
+pnpm build
+```
+
+You should see the following after the build finishes:
+
+```
+app/static/
+├── css
+│   └── app-COwDGdVP.css
+├── favicon
+│   ├── android-chrome-192x192.png
+│   ├── android-chrome-512x512.png
+│   ├── apple-touch-icon.png
+│   ├── favicon-16x16.png
+│   ├── favicon-32x32.png
+│   ├── favicon.ico
+│   └── site.webmanifest
+├── fonts
+│   ├── bootstrap-icons-BeopsB42.woff
+│   └── bootstrap-icons-mSm7cUeB.woff2
+├── js
+│   └── app-hR5JlhjU.js
+└── manifest.json
+```
+
+**Config File**
+
+Optionally, create a `config/local.yaml` file for testing. (`local.yaml` is gitignored). Set the `CONFIG_PATH` environment variable.
 
 ```bash
 uv sync
-export CONFIG_PATH=config/local.yaml
-# or use the example config
+# Run ONE of the following:
+# export CONFIG_PATH=config/local.yaml
 # export CONFIG_PATH=config/example.yaml
 uv run -m app.server
 ```
@@ -118,7 +139,7 @@ services:
 uv run pytest
 ```
 
-Runs the contract, unit, and integration suites (config validation, parsing, live reload, rendering, bookmark groups, and mobile layout).
+Runs the contract, unit, and integration suites (config validation, parsing, live reload, rendering, bookmarks, and mobile layout).
 
 ## Code Formatting and Linting
 

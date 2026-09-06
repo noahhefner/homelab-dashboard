@@ -28,7 +28,7 @@ def test_navbar_brand_shows_configurable_title(tmp_path):
 
 
 def test_navbar_brand_shows_default_when_no_title(tmp_path):
-    app = create_app(config_path=_write_config(tmp_path, {"tiles": []}))
+    app = create_app(config_path=_write_config(tmp_path, {"tile_groups": []}))
     html = app.test_client().get("/").get_data(as_text=True)
 
     assert ">Homelab<" in html
@@ -73,7 +73,7 @@ def test_navbar_shows_default_search_icon_when_no_icon_configured(tmp_path):
     app = create_app(config_path=_write_config(tmp_path, {"title": "MyLab"}))
     html = app.test_client().get("/").get_data(as_text=True)
 
-    assert 'bi-search' in html
+    assert "bi-search" in html
 
 
 def test_navbar_renders_configured_search_icon_with_onerror_fallback(tmp_path):

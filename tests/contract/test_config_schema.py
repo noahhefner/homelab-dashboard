@@ -32,7 +32,7 @@ def test_example_yaml_is_mapping():
 
 def test_example_yaml_parses_to_valid_config():
     config = load_dashboard_from_file(str(EXAMPLE_YAML))
-    assert config.tiles, "example config should have at least one tile"
+    assert config.tile_groups, "example config should have tile groups"
     assert config.bookmark_groups, "example config should have at least one group"
 
 
@@ -51,12 +51,6 @@ def test_contract_fields(example_config_data):
         "search_engine_icon",
     }
     assert set(example_config_data) <= allowed
-
-
-def test_contract_tile_required_fields(example_config_data):
-    for tile in example_config_data.get("tiles", []):
-        assert tile.get("name"), "tile.name required"
-        assert re.match(r"^https?://", tile.get("url", "")), "tile.url must be http(s)"
 
 
 def test_contract_tile_group_required_fields(example_config_data):
@@ -87,7 +81,7 @@ def example_config_data():
 def test_parse_dashboard_accepts_example_raw_data():
     data = _load_raw(EXAMPLE_YAML)
     config = parse_dashboard(data)
-    assert len(config.tiles) == len(data.get("tiles", []))
+    assert len(config.tile_groups) == 2
 
 
 # --- Search engine + icon contract (feature-011) -------------------------------

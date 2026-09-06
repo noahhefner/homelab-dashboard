@@ -16,14 +16,22 @@ def _write_config(tmpdir, data):
 def client_with_tiles(tmpdir):
     data = {
         "title": "Test Lab",
-        "tiles": [
+        "tile_groups": [
             {
-                "name": "Plex",
-                "url": "https://plex.lan:32400",
-                "icon": "https://cdn.example.com/plex.png",
-            },
-            {"name": "Nextcloud", "url": "https://cloud.lan", "icon": "nextcloud"},
-            {"name": "<script>alert('x')</script>", "url": "https://unsafe.lan"},
+                "name": "Media",
+                "tiles": [
+                    {
+                        "name": "Plex",
+                        "url": "https://plex.lan:32400",
+                        "icon": "https://cdn.example.com/plex.png",
+                    },
+                    {"name": "Nextcloud", "url": "https://cloud.lan", "icon": "nextcloud"},
+                    {
+                        "name": "<script>alert('x')</script>",
+                        "url": "https://unsafe.lan",
+                    },
+                ],
+            }
         ],
     }
     app = create_app(config_path=_write_config(tmpdir, data))
@@ -47,7 +55,7 @@ def test_tile_with_icon_url_renders_img(client_with_tiles):
 def test_tile_without_url_icon_renders_monogram(client_with_tiles):
     html = client_with_tiles.get("/").get_data(as_text=True)
     # 'N' is the first letter of Nextcloud, which lacks a URL icon -> monogram
-    assert "N" in html
+    assert '<span class="tile-monogram">N</span>' in html
 
 
 def test_tile_names_are_html_escaped(client_with_tiles):
@@ -64,8 +72,17 @@ def test_tile_links_open_in_new_tab(client_with_tiles):
 
 def test_non_url_icon_renders_monogram_not_img(tmpdir):
     data = {
-        "tiles": [
-            {"name": "Nextcloud", "url": "https://cloud.lan", "icon": "nextcloud"},
+        "tile_groups": [
+            {
+                "name": "G",
+                "tiles": [
+                    {
+                        "name": "Nextcloud",
+                        "url": "https://cloud.lan",
+                        "icon": "nextcloud",
+                    },
+                ],
+            }
         ]
     }
     app = create_app(config_path=_write_config(tmpdir, data))
@@ -77,12 +94,17 @@ def test_non_url_icon_renders_monogram_not_img(tmpdir):
 
 def test_unsafe_icon_value_not_rendered_as_img_src(tmpdir):
     data = {
-        "tiles": [
+        "tile_groups": [
             {
-                "name": "Unsafe",
-                "url": "https://unsafe.lan",
-                "icon": "javascript:alert(1)",
-            },
+                "name": "G",
+                "tiles": [
+                    {
+                        "name": "Unsafe",
+                        "url": "https://unsafe.lan",
+                        "icon": "javascript:alert(1)",
+                    },
+                ],
+            }
         ]
     }
     app = create_app(config_path=_write_config(tmpdir, data))
