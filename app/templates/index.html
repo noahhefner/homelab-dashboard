@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
             name="description"
-            content="Homelab dashboard with links to local tiles and bookmark groups."
+            content="Homelab dashboard."
         />
         <title>{{ title }}</title>
         <link
@@ -46,7 +46,7 @@
                     <form
                         class="d-none d-md-block mx-auto"
                         action="{{ search_action }}"
-                        method="GET"
+                        method="get"
                         target="_blank"
                         rel="noopener"
                     >
@@ -133,7 +133,9 @@
                                             loading="lazy"
                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';"
                                         />
-                                        <span class="tile-group-monogram monogram-fallback">{{ group.name[:1]|upper }}</span>
+                                        <span
+                                            class="tile-group-monogram monogram-fallback"
+                                        >{{ group.name[:1]|upper }}</span>
                                     {% elif group.icon %}
                                         <span class="tile-group-monogram">{{ group.name[:1]|upper }}</span>
                                     {% endif %}
@@ -157,7 +159,9 @@
                                                             loading="lazy"
                                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                                                         />
-                                                        <span class="tile-monogram monogram-fallback">{{ tile.name[:1]|upper }}</span>
+                                                        <span
+                                                            class="tile-monogram monogram-fallback"
+                                                        >{{ tile.name[:1]|upper }}</span>
                                                     {% else %}
                                                         <span class="tile-monogram">{{ tile.name[:1]|upper }}</span>
                                                     {% endif %}
@@ -210,11 +214,17 @@
                                                                         loading="lazy"
                                                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                                                                     />
-                                                                    <span class="bookmark-monogram monogram-fallback">{{ bookmark.label[:1]|upper }}</span>
+                                                                    <span
+                                                                        class="bookmark-monogram monogram-fallback"
+                                                                    >{{ bookmark.label[:1]|upper }}</span>
                                                                 {% else %}
-                                                                    <span class="bookmark-monogram">{{ bookmark.label[:1]|upper }}</span>
+                                                                    <span
+                                                                        class="bookmark-monogram"
+                                                                    >{{ bookmark.label[:1]|upper }}</span>
                                                                 {% endif %}
-                                                                <span class="bookmark-label text-truncate">{{ bookmark.label }}</span>
+                                                                <span
+                                                                    class="bookmark-label text-truncate"
+                                                                >{{ bookmark.label }}</span>
                                                             </a>
                                                         </li>
                                                     {% endfor %}

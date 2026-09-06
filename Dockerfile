@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-# Stage 1: Fetch frontend assets
+# Stage 1: Fetch frontend assets and bundle
 # ------------------------------------------------------------------------------
 
 FROM node:lts-slim AS frontend-assets
@@ -18,7 +18,7 @@ COPY ./public /build/public
 RUN pnpm build
 
 # ------------------------------------------------------------------------------
-# Stage 2: Fetch Python packages
+# Stage 2: Fetch Python packages and create virtual environment
 # ------------------------------------------------------------------------------
 
 FROM python:3.14-slim AS python-venv
@@ -54,20 +54,20 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1\
     CONFIG_PATH=/app/config/example.yaml
 
-# Copy the frontend bundles from the Node stage.
+# Copy the frontend bundles from the Node stage
 COPY --from=frontend-assets /build/app/static/ ./app/static/
 
 # Copy virtual environment and add to PATH
 COPY --from=python-venv /app/.venv ./.venv
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Copy the application.
+# Copy the application
 COPY app ./app
 
 # Ship an example config
 COPY config/example.yaml ./config/
 
-# Give non-root user ownership of the entire /app directory
+# Give non-root user ownership of the /app directory
 RUN chown -R dasher:dasher /app
 
 EXPOSE 5000
