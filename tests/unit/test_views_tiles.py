@@ -131,11 +131,15 @@ def test_unsafe_icon_value_not_rendered_as_img_src(tmpdir):
     }
     app = create_app(config_path=_write_config(tmpdir, data))
     soup = parse(app.test_client().get("/").get_data(as_text=True))
+
     # Unsafe / non-http(s) icon values are never emitted as an image source.
     assert soup.find("img") is None
+
     assert not any(
-        (img.get("src") or "").startswith("javascript:") for img in soup.find_all("img")
+        isinstance(src := img.get("src"), str) and src.startswith("javascript:")
+        for img in soup.find_all("img")
     )
+
     monogram = soup.select_one(".tile-monogram")
     assert monogram is not None
     assert monogram.get_text() == "U"

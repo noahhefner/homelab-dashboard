@@ -141,6 +141,7 @@ def test_tile_logo_change_reflected_on_reload(tmp_path):
     _bump_mtime(cfg)
     time.sleep(0.01)
     img = parse(client.get("/").get_data(as_text=True)).select_one("a.app-tile img")
+    assert img is not None
     assert img.get("src") == logo_b
 
     # Remove the logo -> falls back to a monogram on reload.

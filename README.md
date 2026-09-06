@@ -1,6 +1,6 @@
 # Homelab Dashboard
 
-A self-hosted, single-page dashboard homepage for your home server. It renders your tiles and grouped bookmarks from one YAML file, served by a small Flask app inside a single Docker container.
+A single-page dashboard for your home server. Renders your tiles and grouped bookmarks from one YAML file, served by a small Flask app inside a single Docker container.
 
 <img width="1364" height="881" alt="image" src="https://github.com/user-attachments/assets/5dba3602-35c2-4f51-b78c-63f482cda12f" />
 
@@ -8,6 +8,7 @@ A self-hosted, single-page dashboard homepage for your home server. It renders y
 
 - **Tiles**: Clickable links that open in a new tab. A tile can point to an internal homelab service or an external service (e.g., webmail, a cloud account portal). Tiles are organized with tile groups.
 - **Bookmarks**: Links to other frequently used sites in a compact sidebar. Bookmarks are organized with bookmark groups.
+- **Search Bar**: Quick access to your preferred search engine.
 - **Live reload**: Edit the YAML file and refresh the browser — no restart needed.
 - **Mobile Friendly**: Reflows to no-horizontal-scroll layout on phones; tap-friendly.
 - **Dark mode**: Switchable light/dark themes via a toggle.
@@ -22,7 +23,7 @@ A self-hosted, single-page dashboard homepage for your home server. It renders y
 
 ## Configuration
 
-Everything is configured in a YAML file. See [`config/example.yaml`](config/example.yaml) for a starting point:
+Everything is configured in a YAML file. See [`config/example.yaml`](config/example.yaml) as a starting point:
 
 ```yaml
 title: "Home Lab"  # Title of the page
@@ -135,29 +136,23 @@ services:
 
 ## Tests
 
-```bash
-uv run pytest
-```
+[Pytest](https://docs.pytest.org/) is used as the testing framework. Run the tests with `uv` or the `test` Makefile target:
 
-Runs the contract, unit, and integration suites (config validation, parsing, live reload, rendering, bookmarks, and mobile layout).
+```bash
+# Run tests with uv
+uv run pytest
+
+# Makefile target
+make test
+```
 
 ## Code Formatting and Linting
 
-**Python**
+Formatting and linting commands are provided by the `Makefile`:
 
 ```sh
-# Linting
-uv run ruff check
-uv run ruff check --fix
-# Formatting
-uv run ruff format
-# Type checking
-uv run ty check
-```
-
-**HTML Templates**
-
-```sh
-uv run djlint . --lint
-uv run djlint . --reformat --single-attribute-per-line
+# Check everything
+make check
+# Format everything
+make fix
 ```

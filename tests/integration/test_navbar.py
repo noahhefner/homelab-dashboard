@@ -79,7 +79,7 @@ def test_navbar_has_search_form_on_config_page(tmp_path):
 def test_navbar_shows_default_search_icon_when_no_icon_configured(tmp_path):
     soup = _page_soup(tmp_path, {"title": "MyLab"})
 
-    assert soup.select_one(".search-engine-icon .bi-search") is not None
+    assert soup.select_one(".bi-search") is not None
 
 
 def test_navbar_renders_configured_search_icon_with_onerror_fallback(tmp_path):

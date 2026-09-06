@@ -49,7 +49,9 @@ body {
   color: var(--text-muted);
   font-size: 1.25rem;
   border-radius: 8px;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 /* Search engine indicator icon (feature-011). Sizing/content is Bootstrap-based;
@@ -101,7 +103,10 @@ body {
   border-radius: var(--tile-radius);
   height: 100%;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
   color: inherit;
   text-decoration: none;
 }
@@ -168,7 +173,6 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
 
 /* Tile-group headers and the "Bookmarks" header share this base style. They are
    slightly smaller than the default h3 (1.75rem) so they read as section labels. */
@@ -245,7 +249,9 @@ aside {
   text-decoration: none;
   overflow-wrap: anywhere;
   border-radius: 6px;
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 }
 
 .bookmark-link:hover {
@@ -360,5 +366,8 @@ aside {
 body,
 .app-navbar,
 .app-tile {
-  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
 }

@@ -1,10 +1,9 @@
-import './app.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import "./app.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  
   // ---- Dark mode toggle ----
-  // Theme preference persisted to localStorage across visits. Defaults 
+  // Theme preference persisted to localStorage across visits. Defaults
   // to the system preference, else light.
   var THEME_STORAGE_KEY = "homelab:theme";
 
@@ -25,7 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function systemTheme() {
-    if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
       return "dark";
     }
     return "light";
@@ -37,7 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (icon) {
       // Show the moon icon in light mode (toggle acts as the switch to dark),
       // the sun icon in dark mode.
-      icon.className = "bi theme-icon " + (theme === "dark" ? "bi-sun" : "bi-moon-stars");
+      icon.className =
+        "bi theme-icon " + (theme === "dark" ? "bi-sun" : "bi-moon-stars");
     }
   }
 
@@ -47,7 +50,10 @@ document.addEventListener("DOMContentLoaded", function () {
     applyTheme(initialTheme);
 
     themeToggle.addEventListener("click", function () {
-      var next = document.documentElement.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
+      var next =
+        document.documentElement.getAttribute("data-bs-theme") === "dark"
+          ? "light"
+          : "dark";
       applyTheme(next);
       writePersistedTheme(next);
     });

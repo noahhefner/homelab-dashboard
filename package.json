@@ -12,6 +12,7 @@
     "bootstrap-icons": "^1.13.1"
   },
   "devDependencies": {
+    "prettier": "^3.9.6",
     "vite": "^8.2.2"
   }
 }
