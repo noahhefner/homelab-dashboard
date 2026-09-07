@@ -7,6 +7,7 @@ venv/
 dist/
 build/
 .pytest_cache/
+.ruff_cache/
 .env*
 
 # Docker
@@ -28,5 +29,4 @@ Thumbs.db
 
 # Config files
 local.yaml
-local.yaml.backup.yaml
-example.yaml.backup.yaml
+*.backup.yaml

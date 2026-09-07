@@ -3,7 +3,7 @@ from pathlib import Path
 from app import create_app
 from tests.soup_utils import parse
 
-EXAMPLE_YAML = Path(__file__).resolve().parents[2] / "config" / "example.yaml"
+EXAMPLE_YAML = Path(__file__).resolve().parents[2] / "tests" / "static" / "test-config.yaml"
 
 
 def _get_home_soup():

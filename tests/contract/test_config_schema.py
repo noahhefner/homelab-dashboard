@@ -13,7 +13,7 @@ import yaml
 from app.config import load_dashboard_from_file
 from app.schema import DEFAULT_SEARCH_ENGINE, parse_dashboard
 
-EXAMPLE_YAML = Path(__file__).resolve().parents[2] / "config" / "example.yaml"
+EXAMPLE_YAML = Path(__file__).resolve().parents[2] / "tests" / "static" / "test-config.yaml"
 
 
 def _load_raw(path):

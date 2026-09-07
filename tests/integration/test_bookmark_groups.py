@@ -5,8 +5,6 @@ import yaml
 from app import create_app
 from tests.soup_utils import parse
 
-EXAMPLE_YAML = Path(__file__).resolve().parents[2] / "config" / "example.yaml"
-
 
 def _write_config(tmpdir, data):
     path = Path(tmpdir) / "config.yaml"

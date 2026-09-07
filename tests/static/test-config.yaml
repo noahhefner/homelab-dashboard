@@ -1,0 +1,68 @@
+title: "Home Lab"
+editor: true
+
+show_search: true
+show_bookmarks: true
+
+search_engine: "https://duckduckgo.com/?q={query}"
+search_engine_icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/duckduckgo.svg"
+
+tile_groups:
+  - name: Home Server
+    tiles:
+      - name: Plex
+        url: "https://plex.lan:3240"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/plex.svg"
+      - name: Proxmox
+        url: "https://proxmox.lan:8006"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/proxmox.svg"
+      - name: Grafana
+        url: "https://grafana.lan"
+
+  - name: Cloud & Webmail
+    icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/cloudstream.svg"
+    tiles:
+      - name: Webmail
+        url: "https://mail.example.com"
+        icon: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/proton-mail.svg"
+      - name: Cloud Drive
+        url: "https://drive.example.com"
+
+bookmark_groups:
+  - name: Media
+    collapsed: false
+    bookmarks:
+      - label: YouTube
+        url: "https://www.youtube.com"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/youtube.svg"
+      - label: Spotify
+        url: "https://open.spotify.com"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/spotify.svg"
+      - label: SoundCloud
+        url: "https://soundcloud.com"
+      - label: Hulu
+        url: "https://www.hulu.com"
+
+  - name: Finance
+    collapsed: false
+    bookmarks:
+      - label: Online Banking
+        url: "https://bank.example.com"
+        icon: "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/chase.svg"
+      - label: Brokerage
+        url: "https://invest.example.com"
+      - label: Budgeting App
+        url: "https://budget.example.com"
+
+  - name: Development
+    collapsed: true
+    bookmarks:
+      - label: GitHub
+        url: "https://github.com"
+        icon: "https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/github-light.svg"
+      - label: GitHub Actions
+        url: "https://github.com/features/actions"
+      - label: GitLab
+        url: "https://gitlab.com"
+      - label: Stack Overflow
+        url: "https://stackoverflow.com"
