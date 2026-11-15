@@ -4,7 +4,7 @@ import pytest
 import yaml
 
 from app import create_app
-from tests.soup_utils import parse
+from tests.soup_utils import attr_str, parse
 
 
 def _write_config(tmpdir, data):
@@ -73,7 +73,8 @@ def test_unsafe_icon_value_not_rendered_as_src(tmpdir, group):
     link = _bookmark_links(soup)[0]
     assert soup.find("img") is None
     assert not any(
-        (img.get("src") or "").startswith("javascript:") for img in soup.find_all("img")
+        (attr_str(img, "src") or "").startswith("javascript:")
+        for img in soup.find_all("img")
     )
     monogram = link.select_one("span.bookmark-monogram")
     assert monogram is not None

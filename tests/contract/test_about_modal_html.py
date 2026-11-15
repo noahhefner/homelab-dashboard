@@ -72,6 +72,7 @@ def test_gh_link_inside_modal_opens_in_new_tab_safely(tmp_path):
     soup = _home_soup(tmp_path)
 
     modal = soup.select_one("#about-modal")
+    assert modal is not None
     link = modal.select_one("a")
     assert link is not None
     assert link.get("href") == GITHUB_URL

@@ -1,21 +1,21 @@
 import html
-from urllib.parse import urlparse
+from urllib.parse import ParseResult, urlparse
 
 
-def validate_url(url):
-    """Return True if url is a valid absolute http/https URL."""
-    if not url or not isinstance(url, str):
+def validate_url(value: object) -> bool:
+    """Return True if value is a valid absolute http/https URL."""
+    if not value or not isinstance(value, str):
         return False
     try:
-        parsed = urlparse(url.strip())
+        parsed: ParseResult = urlparse(value.strip())
     except ValueError, TypeError:
         return False
     if parsed.scheme not in ("http", "https"):
         return False
-    return parsed.netloc
+    return bool(parsed.netloc)
 
 
-def escape_html(value):
+def escape_html(value) -> str | None:
     """HTML-escape a renderable string. Returns None for falsy/reserved values."""
     if value is None:
         return None

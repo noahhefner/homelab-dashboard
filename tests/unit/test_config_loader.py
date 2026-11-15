@@ -40,6 +40,7 @@ def test_loader_reloads_on_file_change(tmp_path):
     )
     loader = ConfigLoader(str(cfg))
     config, _ = loader.get()
+    assert config is not None
     assert len(config.tile_groups[0].tiles) == 1
 
     _write(
@@ -61,6 +62,7 @@ def test_loader_reloads_on_file_change(tmp_path):
 
     reloaded, error = loader.get()
     assert error is None
+    assert reloaded is not None
     assert len(reloaded.tile_groups[0].tiles) == 2
 
 
@@ -68,7 +70,9 @@ def test_loader_force_reload(tmp_path):
     cfg = tmp_path / "config.yaml"
     _write(cfg, {"tile_groups": []})
     loader = ConfigLoader(str(cfg))
-    assert loader.get()[0].tile_groups == []
+    config, _ = loader.get()
+    assert config is not None
+    assert config.tile_groups == []
 
     _write(
         cfg,
@@ -79,7 +83,9 @@ def test_loader_force_reload(tmp_path):
         },
     )
     loader.reload()
-    assert len(loader.get()[0].tile_groups[0].tiles) == 1
+    config, _ = loader.get()
+    assert config is not None
+    assert len(config.tile_groups[0].tiles) == 1
 
 
 def test_loader_missing_file_reports_error(tmp_path):

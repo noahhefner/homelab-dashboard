@@ -62,7 +62,10 @@ def test_tiles_render_name_and_url(client_with_tiles):
 def test_tile_with_icon_url_renders_img(client_with_tiles):
     soup = _home_soup(client_with_tiles)
     plex = soup.select_one("a.app-tile")
-    assert plex.select_one("img").get("src") == "https://cdn.example.com/plex.png"
+    assert plex is not None
+    image = plex.select_one("img")
+    assert image is not None
+    assert image.get("src") == "https://cdn.example.com/plex.png"
 
 
 def test_tile_without_url_icon_renders_monogram(client_with_tiles):

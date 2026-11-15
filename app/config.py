@@ -2,6 +2,7 @@ import os
 
 import yaml
 
+from app.model import DashboardConfig
 from app.schema import ConfigValidationError, parse_dashboard
 
 DEFAULT_CONFIG_PATH = "config/example.yaml"
@@ -71,7 +72,7 @@ class ConfigLoader:
         """Force a reload, discarding the cached stat check."""
         self._load_if_needed(force=True)
 
-    def get(self):
+    def get(self) -> tuple[DashboardConfig | None, str | None]:
         """Return (config, error). Config is DashboardConfig or None; error is a
         human-readable string or None."""
         self._load_if_needed()

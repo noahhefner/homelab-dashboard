@@ -1,9 +1,11 @@
 from pathlib import Path
 
 from app import create_app
-from tests.soup_utils import parse
+from tests.soup_utils import attr_str, parse
 
-EXAMPLE_YAML = Path(__file__).resolve().parents[2] / "tests" / "static" / "test-config.yaml"
+EXAMPLE_YAML = (
+    Path(__file__).resolve().parents[2] / "tests" / "static" / "test-config.yaml"
+)
 
 
 def _get_home_soup():
@@ -54,6 +56,8 @@ def test_mobile_stack_uses_full_width_columns():
     # Both columns are col-12 below lg, so bookmarks stack below the apps.
     tiles = soup.select_one('section[aria-label="Tiles"]')
     bookmarks = soup.select_one('aside[aria-label="Bookmarks"]')
+    assert tiles is not None
+    assert bookmarks is not None
     assert "col-12" in (tiles.get("class") or [])
     assert "col-12" in (bookmarks.get("class") or [])
 
@@ -79,14 +83,14 @@ def test_no_remote_or_cdn_asset_urls():
     # Tile logos (user-provided remote images, e.g. dashboardicons.com) are a
     # deliberate exception and are rendered as <img> elements, not CSS/JS assets.
     remote_links = [
-        link.get("href")
+        attr_str(link, "href")
         for link in soup.find_all("link")
-        if (link.get("href") or "").startswith(("http://", "https://"))
+        if (attr_str(link, "href") or "").startswith(("http://", "https://"))
     ]
     remote_scripts = [
-        s.get("src")
-        for s in soup.find_all("script")
-        if (s.get("src") or "").startswith(("http://", "https://"))
+        attr_str(script, "src")
+        for script in soup.find_all("script")
+        if (attr_str(script, "src") or "").startswith(("http://", "https://"))
     ]
     assert remote_links == [], (
         f"external CSS/JS links must not be loaded from CDN: {remote_links}"
@@ -104,6 +108,8 @@ def test_single_consistent_lg_breakpoint():
     # Only one responsive breakpoint (lg) governs the two-column layout.
     tiles = soup.select_one('section[aria-label="Tiles"]')
     bookmarks = soup.select_one('aside[aria-label="Bookmarks"]')
+    assert tiles is not None
+    assert bookmarks is not None
     assert "col-lg-9" in (tiles.get("class") or [])
     assert "col-lg-3" in (bookmarks.get("class") or [])
     # No other responsive col-* variants should drive the sidebar layout.

@@ -103,8 +103,8 @@ def test_tiles_full_width_when_bookmarks_disabled(tmp_path):
 
     tiles = soup.select_one("section[aria-label='Tiles']")
     assert tiles is not None
-    assert "col-12" in tiles.get("class")
-    assert "col-lg-9" not in tiles.get("class")
+    assert "col-12" in (tiles.get("class") or [])
+    assert "col-lg-9" not in (tiles.get("class") or [])
 
 
 def test_tiles_side_by_side_with_bookmarks_by_default(tmp_path):
@@ -112,7 +112,8 @@ def test_tiles_side_by_side_with_bookmarks_by_default(tmp_path):
     soup = _page_soup(tmp_path, data)
 
     tiles = soup.select_one("section[aria-label='Tiles']")
-    assert "col-lg-9" in tiles.get("class")
+    assert tiles is not None
+    assert "col-lg-9" in (tiles.get("class") or [])
 
 
 # --- Combined + independence (feature-012 / US3) ----------------------------

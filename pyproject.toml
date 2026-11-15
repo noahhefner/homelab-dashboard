@@ -17,9 +17,9 @@ dependencies = [
 dev = [
     "beautifulsoup4>=4.15.0",
     "djlint>=1.50.3",
+    "pyrefly>=1.4.1",
     "pytest>=9.2.0",
     "ruff>=0.17.5",
-    "ty>=0.0.104",
     "uv-upsync>=2.4.2",
 ]
 
@@ -33,3 +33,9 @@ package = false
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+
+[tool.pyrefly]
+project-includes = [
+    "**/*.py*",
+    "**/*.ipynb",
+]

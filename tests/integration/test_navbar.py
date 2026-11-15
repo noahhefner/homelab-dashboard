@@ -3,7 +3,7 @@ from pathlib import Path
 import yaml
 
 from app import create_app
-from tests.soup_utils import parse
+from tests.soup_utils import attr_str, parse
 
 
 def _write_config(tmpdir, data):
@@ -29,13 +29,17 @@ def test_page_renders_navbar_with_brand(tmp_path):
 def test_navbar_brand_shows_configurable_title(tmp_path):
     soup = _page_soup(tmp_path, {"title": "Custom Name"})
 
-    assert soup.select_one(".navbar-brand").get_text(strip=True) == "Custom Name"
+    brand = soup.select_one(".navbar-brand")
+    assert brand is not None
+    assert brand.get_text(strip=True) == "Custom Name"
 
 
 def test_navbar_brand_shows_default_when_no_title(tmp_path):
     soup = _page_soup(tmp_path, {"tile_groups": []})
 
-    assert soup.select_one(".navbar-brand").get_text(strip=True) == "Homelab"
+    brand = soup.select_one(".navbar-brand")
+    assert brand is not None
+    assert brand.get_text(strip=True) == "Homelab"
 
 
 def test_navbar_has_right_side_toggle_area(tmp_path):
@@ -98,4 +102,6 @@ def test_navbar_uses_custom_search_engine_in_action(tmp_path):
 
     form = soup.select_one("form")
     assert form is not None
-    assert form.get("action").startswith("https://duckduckgo.com/")
+    action = attr_str(form, "action")
+    assert action is not None
+    assert action.startswith("https://duckduckgo.com/")

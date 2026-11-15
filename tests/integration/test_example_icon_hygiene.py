@@ -2,7 +2,9 @@ from pathlib import Path
 
 import yaml
 
-EXAMPLE_YAML = Path(__file__).resolve().parents[2] / "tests" / "static" / "test-config.yaml"
+EXAMPLE_YAML = (
+    Path(__file__).resolve().parents[2] / "tests" / "static" / "test-config.yaml"
+)
 
 
 def _is_supported_icon(value):

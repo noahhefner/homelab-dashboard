@@ -5,7 +5,9 @@ import yaml
 from app import create_app
 from tests.soup_utils import parse
 
-EXAMPLE_YAML = Path(__file__).resolve().parents[2] / "tests" / "static" / "test-config.yaml"
+EXAMPLE_YAML = (
+    Path(__file__).resolve().parents[2] / "tests" / "static" / "test-config.yaml"
+)
 
 
 def _write_config(tmpdir, data):
@@ -99,6 +101,7 @@ def test_tile_group_with_icon_renders_img_beside_name(tmpdir):
     }
     soup = _soup_for(tmpdir, data)
     header = soup.select_one("h3.group-title")
+    assert header is not None
     icon_img = header.select_one(".tile-group-icon")
     assert icon_img is not None
     assert icon_img.get("src") == icon
@@ -116,6 +119,7 @@ def test_tile_group_with_non_url_icon_renders_monogram(tmpdir):
     }
     soup = _soup_for(tmpdir, data)
     header = soup.select_one("h3.group-title")
+    assert header is not None
     # A plain-word icon must NOT become an <img src>; the group shows a monogram.
     assert header.select_one(".tile-group-icon") is None
     monogram = header.select_one(".tile-group-monogram")

@@ -20,7 +20,7 @@ format-check:
 	uv run ruff format --check $(PYTHON_SRC)
 
 typecheck:
-	uv run ty check $(PYTHON_SRC)
+	uv run pyrefly check $(PYTHON_SRC)
 
 test:
 	uv run pytest
@@ -54,7 +54,7 @@ check:
 	uv run ruff format --check $(PYTHON_SRC)
 
 	@printf '\n==> Python: type checking\n'
-	uv run ty check $(PYTHON_SRC)
+	uv run pyrefly check $(PYTHON_SRC)
 
 	@printf '\n==> Templates: checking with djlint\n'
 	uv run djlint $(TEMPLATES)
