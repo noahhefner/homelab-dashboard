@@ -2,11 +2,13 @@
 # Stage 1: Fetch frontend assets and bundle
 # ------------------------------------------------------------------------------
 
-FROM node:lts-slim AS frontend-assets
+FROM node:24-slim AS frontend-assets
 
 WORKDIR /build
 
-RUN corepack enable
+# Add pnpm
+COPY --from=ghcr.io/pnpm/pnpm:12 /opt/pnpm /opt/pnpm
+RUN for bin in pnpm pn pnpx pnx; do ln -s "/opt/pnpm/$bin" "/usr/local/bin/$bin"; done
 
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
