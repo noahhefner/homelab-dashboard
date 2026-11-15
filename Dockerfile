@@ -21,7 +21,7 @@ RUN pnpm build
 # Stage 2: Fetch Python packages and create virtual environment
 # ------------------------------------------------------------------------------
 
-FROM python:3.14-slim AS python-venv
+FROM python:3.15-slim AS python-venv
 
 WORKDIR /app
 
@@ -43,7 +43,7 @@ RUN uv sync --frozen --no-dev
 # Stage 3: Runner
 # ------------------------------------------------------------------------------
 
-FROM python:3.14-slim AS runner
+FROM python:3.15-slim AS runner
 
 # Create a non-root user
 RUN useradd --create-home dasher
