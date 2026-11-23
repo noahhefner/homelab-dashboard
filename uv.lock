@@ -503,7 +503,7 @@ wheels = [
 
 [[package]]
 name = "uv-upsync"
-version = "2.4.2"
+version = "2.4.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -512,9 +512,9 @@ dependencies = [
     { name = "tomlkit" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3d/79/d7977363985f84f6fbad683ab45bc7fef06915ab31b77eac34ba49661c4a/uv_upsync-2.4.2.tar.gz", hash = "sha256:48b48dd72b3f715f9f9f975b2a45879354eb7d92d1c8030fe575732f92aa26ee", size = 68170, upload-time = "2026-09-20T13:11:40.884Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/98/ce/a615d050a5f90035dcb6e4c72e4bbee2ba6f61defce0db27772de7287258/uv_upsync-2.4.3.tar.gz", hash = "sha256:54c53ca8ebf5c1c41fae591af3efa177b891267ffd699a746cf46113785bc6e9", size = 78803, upload-time = "2026-11-20T09:40:14.617Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b6/db/839e6b0cdba11ff20bf526903aa0adc712c94ecb8ebcede4839b6e6fb68c/uv_upsync-2.4.2-py3-none-any.whl", hash = "sha256:95f479dfa92b485ede85d8a4d74176fa8154cd7da7e22ba7a99e33e6e089e039", size = 21677, upload-time = "2026-09-20T13:11:39.918Z" },
+    { url = "https://files.pythonhosted.org/packages/96/10/087a0ee5d82505a0dc7cebb98865e89f2e5287f59ee1a94707aec325c4de/uv_upsync-2.4.3-py3-none-any.whl", hash = "sha256:991c068b9cdd2db126d9b8805a35c7c87b4661faf75a535f5e5e97e68eb5923d", size = 21675, upload-time = "2026-11-20T09:40:13.684Z" },
 ]
 
 [[package]]
